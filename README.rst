@@ -20,7 +20,7 @@ INSTALLATION
 
 First, you must do::
 
-    pip install git+https://github.com/matannoam/pypugjs.git
+    pip install pypugjs
 
 Or::
 

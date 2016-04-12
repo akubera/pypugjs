@@ -39,7 +39,7 @@ INSTALLATION
 First, you must do:
 
 ```console
-pip install git+https://github.com/matannoam/pypugjs.git
+pip install pypugjs
 ```
 
 Or:
