@@ -1,19 +1,19 @@
 from setuptools import setup,find_packages
 
-setup(name='pyjade',
+setup(name='pypugjs',
       version='4.0.0',
-      download_url='git@github.com:syrusakbary/pyjade.git',
+      download_url='git@github.com:matannoam/pypugjs.git',
       packages=find_packages(),
       author='Syrus Akbary',
       author_email='me@syrusakbary.com',
-      description='Jade syntax template adapter for Django, Jinja2, Mako and '
+      description='PugJS syntax template adapter for Django, Jinja2, Mako and '
                   'Tornado templates',
       long_description=open('README.rst').read(),
-      keywords='jade template converter',
-      url='http://github.com/syrusakbary/pyjade',
+      keywords='pug pugjs template converter',
+      url='http://github.com/matannoam/pypugjs',
       license='MIT',
       entry_points={
-          'console_scripts' : ['pyjade = pyjade.convert:convert_file',]
+          'console_scripts' : ['pypugjs = pypugjs.convert:convert_file',]
       },
       install_requires=['six'],
       tests_require=[

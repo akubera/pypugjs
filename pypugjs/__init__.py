@@ -5,4 +5,4 @@ from .utils import process
 from .filters import register_filter
 from .ext import html
 
-simple_convert = lambda t: html.process_jade(t)
+simple_convert = lambda t: html.process_pugjs(t)

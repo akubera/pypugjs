@@ -16,11 +16,11 @@ except ImportError: # Django < 1.8
 from django.template.loader import get_template
 import six
 
-from pyjade.runtime import iteration
+from pypugjs.runtime import iteration
 
 register = template.Library()
 
-@register.tag(name="__pyjade_attrs")
+@register.tag(name="__pypugjs_attrs")
 def do_evaluate(parser, token):
   '''Calls an arbitrary method on an object.'''
   code = token.contents
@@ -37,16 +37,16 @@ class Evaluator(template.Node):
   def render(self, context):
     '''Evaluates the code in the page and returns the result'''
     modules = {
-      'pyjade': __import__('pyjade')
+      'pypugjs': __import__('pypugjs')
     }
     context['false'] = False
     context['true'] = True
     try:
-        return six.text_type(eval('pyjade.runtime.attrs(%s)'%self.code,modules,context))
+        return six.text_type(eval('pypugjs.runtime.attrs(%s)'%self.code,modules,context))
     except NameError:
         return ''
 
-@register.tag(name="__pyjade_set")
+@register.tag(name="__pypugjs_set")
 def do_set(parser, token):
   '''Calls an arbitrary method on an object.'''
   code = token.contents
@@ -70,7 +70,7 @@ class Setter(template.Node):
     context.update(new_ctx)
     return ''
 
-register.filter('__pyjade_iter', iteration)
+register.filter('__pypugjs_iter', iteration)
 
 
 
@@ -108,7 +108,7 @@ class DefineMacroNode(template.Node):
         return ''
  
  
-@register.tag(name="__pyjade_kwacro")
+@register.tag(name="__pypugjs_kwacro")
 def do_macro(parser, token):
     try:
         args = token.split_contents()
@@ -119,7 +119,7 @@ def do_macro(parser, token):
         raise template.TemplateSyntaxError(m)
     # TODO: could do some validations here,
     # for now, "blow your head clean off"
-    nodelist = parser.parse(('end__pyjade_kwacro', ))
+    nodelist = parser.parse(('end__pypugjs_kwacro', ))
     parser.delete_first_token()
  
     ## Metadata of each macro are stored in a new attribute
@@ -136,7 +136,7 @@ class LoadMacrosNode(template.Node):
         return ''
  
  
-@register.tag(name="__pyjade_loadkwacros")
+@register.tag(name="__pypugjs_loadkwacros")
 def do_loadmacros(parser, token):
     try:
         tag_name, filename = token.split_contents()
@@ -184,7 +184,7 @@ class UseMacroNode(template.Node):
         return self.macro.nodelist.render(context)
  
  
-@register.tag(name="__pyjade_usekwacro")
+@register.tag(name="__pypugjs_usekwacro")
 def do_usemacro(parser, token):
     try:
         args = token.split_contents()

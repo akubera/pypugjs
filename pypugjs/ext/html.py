@@ -2,8 +2,8 @@
 
 import contextlib
 
-import pyjade
-from pyjade.runtime import is_mapping, iteration, escape
+import pypugjs
+from pypugjs.runtime import is_mapping, iteration, escape
 import six
 import os
 import operator 
@@ -34,7 +34,7 @@ def local_context_manager(compiler, local_context):
     compiler.local_context = old_local_context
 
 
-class Compiler(pyjade.compiler.Compiler):
+class Compiler(pypugjs.compiler.Compiler):
     global_context = {}
     local_context = {}
     mixins = {}
@@ -77,17 +77,17 @@ class Compiler(pyjade.compiler.Compiler):
     def visitInclude(self, node):
         if os.path.exists(node.path):
             src = open(node.path, 'r').read()
-        elif os.path.exists("%s.jade" % node.path):
-            src = open("%s.jade" % node.path, 'r').read()
+        elif os.path.exists("%s.pug" % node.path):
+            src = open("%s.pug" % node.path, 'r').read()
         else:
             raise Exception("Include path doesn't exists")
 
-        parser = pyjade.parser.Parser(src)
+        parser = pypugjs.parser.Parser(src)
         block = parser.parse()
         self.visit(block)
 
     def visitExtends(self, node):
-        raise pyjade.exceptions.CurrentlyNotSupported()
+        raise pypugjs.exceptions.CurrentlyNotSupported()
 
     def visitMixin(self, mixin):
         if mixin.block:
@@ -161,8 +161,8 @@ class Compiler(pyjade.compiler.Compiler):
 
 HTMLCompiler = Compiler
 
-def process_jade(src):
-    parser = pyjade.parser.Parser(src)
+def process_pugjs(src):
+    parser = pypugjs.parser.Parser(src)
     block = parser.parse()
     compiler = Compiler(block, pretty=True)
     return compiler.compile()

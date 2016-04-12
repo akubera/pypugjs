@@ -1,5 +1,5 @@
-from pyjade.lexer import Lexer
-from pyjade.utils import odict
+from pypugjs.lexer import Lexer
+from pypugjs.utils import odict
 
 expected_results = {
     "p Here is some #[strong: em text] and look at #[a(href='http://google.com') this link!]": [
@@ -135,8 +135,8 @@ p Test inline mixin #[+lala(123, 'lala inside inline')] end""": [
 }
 
 
-def generate_expected(jade):
-    lx = Lexer(jade)
+def generate_expected(pugjs):
+    lx = Lexer(pugjs)
     res = []
     while True:
         tok = lx.advance()
@@ -146,8 +146,8 @@ def generate_expected(jade):
     return res
 
 
-def process(jade):
-    assert expected_results[jade] == generate_expected(jade)
+def process(pugjs):
+    assert expected_results[pugjs] == generate_expected(pugjs)
 
 
 def test_lexer():

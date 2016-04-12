@@ -66,7 +66,7 @@ class Compiler(object):
         self.autocloseCode.extend(options.get('autocloseCode', []))
         self.inlineTags.extend(options.get('inlineTags', []))
         self.useRuntime = options.get('useRuntime', True)
-        self.extension = options.get('extension', None) or '.jade'
+        self.extension = options.get('extension', None) or '.pug'
         self.indents = 0
         self.doctype = None
         self.terse = False
@@ -112,14 +112,14 @@ class Compiler(object):
     def visit(self, node, *args, **kwargs):
         # debug = self.debug
         # if debug:
-        #     self.buf.append('__jade.unshift({ lineno: %d, filename: %s });' % (node.line,('"%s"'%node.filename) if node.filename else '__jade[0].filename'));
+        #     self.buf.append('__pugjs.unshift({ lineno: %d, filename: %s });' % (node.line,('"%s"'%node.filename) if node.filename else '__pugjs[0].filename'));
 
         # if node.debug==False and self.debug:
         #     self.buf.pop()
         #     self.buf.pop()
 
         self.visitNode(node, *args, **kwargs)
-        # if debug: self.buf.append('__jade.shift();')
+        # if debug: self.buf.append('__pugjs.shift();')
 
     def visitNode (self, node, *args, **kwargs):
         name = node.__class__.__name__
@@ -332,12 +332,12 @@ class Compiler(object):
                   self.buf.append('{%% end%s %%}' % codeTag)
 
     def visitEach(self,each):
-        self.buf.append('{%% for %s in %s|__pyjade_iter:%d %%}' % (','.join(each.keys), each.obj, len(each.keys)))
+        self.buf.append('{%% for %s in %s|__pypugjs_iter:%d %%}' % (','.join(each.keys), each.obj, len(each.keys)))
         self.visit(each.block)
         self.buf.append('{% endfor %}')
 
     def attributes(self,attrs):
-        return "%s__pyjade_attrs(%s)%s" % (self.variable_start_string, attrs, self.variable_end_string)
+        return "%s__pypugjs_attrs(%s)%s" % (self.variable_start_string, attrs, self.variable_end_string)
 
     def visitDynamicAttributes(self, attrs):
         buf, classes, params = [], [], {}

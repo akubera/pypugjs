@@ -3,7 +3,7 @@ import sys
 import logging
 import codecs
 from optparse import OptionParser
-from pyjade.utils import process
+from pypugjs.utils import process
 import os
 
 def convert_file():
@@ -11,7 +11,7 @@ def convert_file():
     available_compilers = {}
     for i in support_compilers_list:
         try:
-            compiler_class = __import__('pyjade.ext.%s' % i, fromlist=['pyjade']).Compiler
+            compiler_class = __import__('pypugjs.ext.%s' % i, fromlist=['pypugjs']).Compiler
         except ImportError as e:
             logging.warning(e)
         else:

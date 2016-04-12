@@ -1,10 +1,10 @@
 import logging
 import os
 
-from pyjade import Compiler as _Compiler, Parser, register_filter
-from pyjade.runtime import attrs
-from pyjade.exceptions import CurrentlyNotSupported
-from pyjade.utils import process
+from pypugjs import Compiler as _Compiler, Parser, register_filter
+from pypugjs.runtime import attrs
+from pypugjs.exceptions import CurrentlyNotSupported
+from pypugjs.utils import process
 
 from django.conf import settings
 
@@ -14,7 +14,7 @@ class Compiler(_Compiler):
 
     def __init__(self, node, **options):
         if settings.configured:
-            options.update(getattr(settings,'PYJADE',{}))
+            options.update(getattr(settings,'PYPUGJS',{}))
         super(Compiler, self).__init__(node, **options)
 
     def visitCodeBlock(self,block):
@@ -25,18 +25,18 @@ class Compiler(_Compiler):
         self.buffer('{% endblock %}')
 
     def visitAssignment(self,assignment):
-        self.buffer('{%% __pyjade_set %s = %s %%}'%(assignment.name,assignment.val))
+        self.buffer('{%% __pypugjs_set %s = %s %%}'%(assignment.name,assignment.val))
 
     def visitMixin(self,mixin):
         self.mixing += 1
         if not mixin.call:
-          self.buffer('{%% __pyjade_kwacro %s %s %%}'%(mixin.name,mixin.args)) 
+          self.buffer('{%% __pypugjs_kwacro %s %s %%}'%(mixin.name,mixin.args)) 
           self.visitBlock(mixin.block)
-          self.buffer('{% end__pyjade_kwacro %}')
+          self.buffer('{% end__pypugjs_kwacro %}')
         elif mixin.block:
           raise CurrentlyNotSupported("The mixin blocks are not supported yet.")
         else:
-          self.buffer('{%% __pyjade_usekwacro %s %s %%}'%(mixin.name,mixin.args))
+          self.buffer('{%% __pypugjs_usekwacro %s %s %%}'%(mixin.name,mixin.args))
         self.mixing -= 1
 
     def visitCode(self,code):
@@ -56,7 +56,7 @@ class Compiler(_Compiler):
                   self.buf.append('{%% end%s %%}'%codeTag)
 
     def attributes(self,attrs):
-        return "{%% __pyjade_attrs %s %%}"%attrs
+        return "{%% __pypugjs_attrs %s %%}"%attrs
 
 
 try:
@@ -64,11 +64,11 @@ try:
         from django.template.base import add_to_builtins
     except ImportError: # Django < 1.8
         from django.template import add_to_builtins
-    add_to_builtins('pyjade.ext.django.templatetags')
+    add_to_builtins('pypugjs.ext.django.templatetags')
 except ImportError:
     # Django 1.9 removed add_to_builtins and instead
     # provides a setting to specify builtins:
-    # TEMPLATES['OPTIONS']['builtins'] = ['pyjade.ext.django.templatetags']
+    # TEMPLATES['OPTIONS']['builtins'] = ['pypugjs.ext.django.templatetags']
     pass
 
 from django.utils.translation import trans_real
@@ -81,7 +81,7 @@ except ImportError:
 def decorate_templatize(func):
     def templatize(src, origin=None):
         src = to_text(src, settings.FILE_CHARSET)
-        if origin.endswith(".jade"):
+        if origin.endswith(".pug"):
             html = process(src,compiler=Compiler)
         else:
             html = src

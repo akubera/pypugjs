@@ -1,8 +1,8 @@
 import os
 from itertools import count
-from pyjade import Parser, Compiler as _Compiler
-from pyjade.runtime import attrs
-from pyjade.utils import process
+from pypugjs import Parser, Compiler as _Compiler
+from pypugjs.runtime import attrs
+from pypugjs.utils import process
 import six
 
 def process_param(key, value, terse=False):
