@@ -88,8 +88,8 @@ def get_cardinality(ob):
 
 def iteration(obj, num_keys):
     """
-    Jade iteration supports "for 'value' [, key]?" iteration only.
-    PyJade has implicitly supported value unpacking instead, without
+    PugJS iteration supports "for 'value' [, key]?" iteration only.
+    PyPugJS has implicitly supported value unpacking instead, without
     the list indexes. Trying to not break existing code, the following
     rules are applied:
 

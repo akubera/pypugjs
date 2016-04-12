@@ -1,4 +1,4 @@
-from pyjade.ext.mako import preprocessor
+from pypugjs.ext.mako import preprocessor
 try:
     from pyramid_mako import MakoRendererFactory
     from pyramid_mako import parse_options_from_settings
@@ -9,9 +9,9 @@ except ImportError:
     is_pyramid_mako = False
 
 
-class PyjadeRenderer(object):
+class PyPugJSRenderer(object):
     """
-    The jade renderer
+    The PugJS renderer
     """
     def __init__(self, info):
         info.settings['mako.preprocessor'] = preprocessor
@@ -21,7 +21,7 @@ class PyjadeRenderer(object):
         return self.makoRenderer(value, system)
 
 
-def add_jade_renderer(config, extension, mako_settings_prefix='mako.'):
+def add_pugjs_renderer(config, extension, mako_settings_prefix='mako.'):
 
     renderer_factory = MakoRendererFactory()
     config.add_renderer(extension, renderer_factory)
@@ -35,12 +35,12 @@ def add_jade_renderer(config, extension, mako_settings_prefix='mako.'):
 
         renderer_factory.lookup = lookup
 
-    config.action(('jade-renderer', extension), register)
+    config.action(('pug-renderer', extension), register)
 
 
 def includeme(config):
     if not is_pyramid_mako:
-        config.add_renderer(".jade", renderer)
+        config.add_renderer(".pug", renderer)
     else:
-        config.add_directive('add_jade_renderer', add_jade_renderer)
-        config.add_jade_renderer('.jade')
+        config.add_directive('add_pugjs_renderer', add_pugjs_renderer)
+        config.add_pugjs_renderer('.pug')

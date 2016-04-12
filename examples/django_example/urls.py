@@ -7,7 +7,7 @@ from django.shortcuts import render
 
 def my_view(request):
     # View code here...
-    return render(request, 'test.jade', {"foo": "bar"})
+    return render(request, 'test.pug', {"foo": "bar"})
 
 urlpatterns = patterns('',
     # Examples:

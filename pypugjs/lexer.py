@@ -293,7 +293,7 @@ class Lexer(object):
         sval_stripped = [i.strip() for i in sval]
 
         if sval_stripped.count('"') % 2 != 0 or sval_stripped.count("'") % 2 != 0:
-            raise Exception('Unbalanced quotes found inside inline jade at line %s.' % self.lineno)
+            raise Exception('Unbalanced quotes found inside inline PugJS at line %s.' % self.lineno)
 
         sval_replaced = replace_string_brackets(sval)
         start_inline = self.RE_INLINE.search(sval_replaced).start()

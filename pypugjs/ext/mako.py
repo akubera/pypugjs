@@ -1,11 +1,11 @@
 import os
 import sys
 
-from pyjade import Parser, Compiler as _Compiler
-from pyjade.runtime import attrs as _attrs
-from pyjade.utils import process
-ATTRS_FUNC = '__pyjade_attrs'
-ITER_FUNC = '__pyjade_iter'
+from pypugjs import Parser, Compiler as _Compiler
+from pypugjs.runtime import attrs as _attrs
+from pypugjs.utils import process
+ATTRS_FUNC = '__pypugjs_attrs'
+ITER_FUNC = '__pypugjs_iter'
 
 def attrs(attrs, terse=False):
     return _attrs(attrs, terse, MakoUndefined)
@@ -13,7 +13,7 @@ def attrs(attrs, terse=False):
 class Compiler(_Compiler):
     useRuntime = True
     def compile_top(self):
-        return '# -*- coding: utf-8 -*-\n<%%! from pyjade.runtime import attrs as %s, iteration as %s\nfrom mako.runtime import Undefined %%>' % (ATTRS_FUNC,ITER_FUNC)
+        return '# -*- coding: utf-8 -*-\n<%%! from pypugjs.runtime import attrs as %s, iteration as %s\nfrom mako.runtime import Undefined %%>' % (ATTRS_FUNC,ITER_FUNC)
 
     def interpolate(self, text, escape=True):
         return self._interpolate(text,lambda x:'${%s}'%x)

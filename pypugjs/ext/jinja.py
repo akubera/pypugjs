@@ -1,15 +1,15 @@
 from jinja2.ext import Extension
 import os
-import pyjade.runtime
+import pypugjs.runtime
 
-from pyjade import Compiler as _Compiler
-from pyjade.runtime import attrs as _attrs, iteration
+from pypugjs import Compiler as _Compiler
+from pypugjs.runtime import attrs as _attrs, iteration
 from jinja2 import Markup
 from jinja2.runtime import Undefined
-from pyjade.utils import process
+from pypugjs.utils import process
 
-ATTRS_FUNC = '__pyjade_attrs'
-ITER_FUNC = '__pyjade_iter'
+ATTRS_FUNC = '__pypugjs_attrs'
+ITER_FUNC = '__pypugjs_iter'
 
 def attrs(attrs, terse=False):
     return Markup(_attrs(attrs, terse, Undefined))
@@ -19,7 +19,7 @@ class Compiler(_Compiler):
     def visitCodeBlock(self,block):
         if self.mixing > 0:
           if self.mixing > 1:
-            caller_name = '__pyjade_caller_%d' % self.mixing
+            caller_name = '__pypugjs_caller_%d' % self.mixing
           else:
             caller_name = 'caller'
           self.buffer('{%% if %s %%}%s %s() %s{%% endif %%}' % (caller_name, self.variable_start_string,
@@ -39,7 +39,7 @@ class Compiler(_Compiler):
           self.buffer('{% endmacro %}')
         elif mixin.block:
           if self.mixing > 1:
-            self.buffer('{%% set __pyjade_caller_%d=caller %%}' % self.mixing)
+            self.buffer('{%% set __pypugjs_caller_%d=caller %%}' % self.mixing)
           self.buffer('{%% call %s(%s) %%}'%(mixin.name,mixin.args))
           self.visitBlock(mixin.block)
           self.buffer('{% endcall %}')
@@ -78,7 +78,7 @@ class Compiler(_Compiler):
         return "%s%s(%s)%s" % (self.variable_start_string, ATTRS_FUNC,attrs, self.variable_end_string)
 
 
-class PyJadeExtension(Extension):
+class PyPugJSExtension(Extension):
 
     # def exception_handler(self,pt):
     #     # print '******************************'
@@ -93,13 +93,13 @@ class PyJadeExtension(Extension):
     #     # pt.frames = [tb]
     #     raise pt.exc_type, pt.exc_value, tb
     options = {}
-    file_extensions = '.jade'
+    file_extensions = '.pug'
     def __init__(self, environment):
-        super(PyJadeExtension, self).__init__(environment)
+        super(PyPugJSExtension, self).__init__(environment)
 
         environment.extend(
-            pyjade=self,
-            # jade_env=JinjaEnvironment(),
+            pypugjs=self,
+            # pugjs_env=JinjaEnvironment(),
         )
 
         # environment.exception_handler = self.exception_handler

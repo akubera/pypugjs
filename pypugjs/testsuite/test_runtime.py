@@ -1,4 +1,4 @@
-from pyjade import runtime
+from pypugjs import runtime
 
 
 class TestIteration(object):

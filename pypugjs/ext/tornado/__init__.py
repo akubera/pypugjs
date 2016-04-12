@@ -1,12 +1,12 @@
-from pyjade import Compiler as _Compiler
-from pyjade.runtime import attrs, escape, iteration
+from pypugjs import Compiler as _Compiler
+from pypugjs.runtime import attrs, escape, iteration
 import tornado.template
-from pyjade.utils import process
-from pyjade.exceptions import CurrentlyNotSupported
+from pypugjs.utils import process
+from pypugjs.exceptions import CurrentlyNotSupported
 
-ATTRS_FUNC = '__pyjade_attrs'
-ESCAPE_FUNC = '__pyjade_escape'
-ITER_FUNC = '__pyjade_iter'
+ATTRS_FUNC = '__pypugjs_attrs'
+ESCAPE_FUNC = '__pypugjs_escape'
+ITER_FUNC = '__pypugjs_iter'
 
 class Compiler(_Compiler):
 
@@ -79,18 +79,18 @@ class Compiler(_Compiler):
 
 class Template(tornado.template.Template):
     def __init__(self, template_string, name="<string>", *args,**kwargs):
-        is_jade = name.endswith(".jade")
-        if is_jade:
+        is_pugjs = name.endswith(".pug")
+        if is_pugjs:
             template_string = process(template_string,filename=name,compiler=Compiler)
 
         super(Template, self).__init__(template_string, name, *args,**kwargs)
-        if is_jade:
+        if is_pugjs:
             self.namespace.update(
                 {ATTRS_FUNC:attrs,
                 ESCAPE_FUNC:escape,
                 ITER_FUNC:iteration}
             )
 
-# Patch tornado template engine for preprocess jade templates
+# Patch tornado template engine for preprocess PugJS templates
 def patch_tornado():
     tornado.template.Template = Template

@@ -17,7 +17,7 @@ import os
 from django.conf import settings
 from .compiler import Compiler
 
-from pyjade.utils import process
+from pypugjs.utils import process
 # from django.template.loaders.cached import Loader
 
 
@@ -90,7 +90,7 @@ class Loader(BaseLoader):
 
         if settings.DEBUG or key not in self.template_cache:
 
-            if os.path.splitext(template_name)[1] in ('.jade',):
+            if os.path.splitext(template_name)[1] in ('.pug',):
                 try:
                     source, display_name = self.load_template_source(template_name, template_dirs)
                     source = process(source,filename=template_name,compiler=Compiler)

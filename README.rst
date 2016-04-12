@@ -1,15 +1,17 @@
 ======
-PyJade
+PyPugJS
 ======
 
-PyJade is a high performance port of Jade-lang for python, that converts any .jade source to the each Template-language (Django, Jinja2, Mako or Tornado).
+**PyPugJS is just a fork of [PyJade](https://github.com/syrusakbary/pyjade) with the name Jade changed to [PugsJS](https://github.com/pugjs/pug).**
+
+PyPugJS is a high performance port of PugJS for python, that converts any .pug source to the each Template-language (Django, Jinja2, Mako or Tornado).
 
 
 UTILITIES
 =========
 To simply output the conversion to your console::
 
-    pyjade [-c django|jinja|mako|tornado] input.jade [output.html]
+    pypugjs [-c django|jinja|mako|tornado] input.pug [output.html]
 
 
 INSTALLATION
@@ -17,15 +19,15 @@ INSTALLATION
 
 First, you must do::
 
-    pip install pyjade
+    pip install git+https://github.com/matannoam/pypugjs.git
 
 Or::
 
     python setup.py install
 
-Now simply **name your templates with a `.jade` extension** and this jade compiler
+Now simply **name your templates with a `.pug` extension** and this PugJS compiler
 will do the rest.  Any templates with other extensions will not be compiled
-with the pyjade compiler.
+with the pypugjs compiler.
 
 
 Django
@@ -48,13 +50,13 @@ In `settings.py`, add a `loader` to `TEMPLATES` like so:
                     'django.core.context_processors.request'
                 ],
                 'loaders': [
-                    # PyJade part:   ##############################
-                    ('pyjade.ext.django.Loader', (
+                    # PyPugJS part:   ##############################
+                    ('pypugjs.ext.django.Loader', (
                         'django.template.loaders.filesystem.Loader',
                         'django.template.loaders.app_directories.Loader',
                     ))
                 ],
-                'builtins': ['pyjade.ext.django.templatetags'],  # Remove this line for Django 1.8
+                'builtins': ['pypugjs.ext.django.templatetags'],  # Remove this line for Django 1.8
             },
         },
     ]
@@ -63,21 +65,21 @@ In `settings.py`, add a `loader` to `TEMPLATES` like so:
 Jinja2
 ------
 
-Just add `pyjade.ext.jinja.PyJadeExtension` as extension
+Just add `pypugjs.ext.jinja.PyPugJSExtension` as extension
 
 .. code:: python
 
-    jinja_env = Environment(extensions=['pyjade.ext.jinja.PyJadeExtension'])
+    jinja_env = Environment(extensions=['pypugjs.ext.jinja.PyPugJSExtension'])
 
 
 Mako
 ----
 
-Just add  `pyjade.ext.mako.preprocessor` as preprocessor
+Just add  `pypugjs.ext.mako.preprocessor` as preprocessor
 
 .. code:: python
 
-    from pyjade.ext.mako import preprocessor as mako_preprocessor
+    from pypugjs.ext.mako import preprocessor as mako_preprocessor
     mako.template.Template(haml_source,
         preprocessor=mako_preprocessor
     )
@@ -86,11 +88,11 @@ Just add  `pyjade.ext.mako.preprocessor` as preprocessor
 Flask
 -----
 
-Just add  `pyjade.ext.jinja.PyJadeExtension` as extension to the environment of the app
+Just add  `pypugjs.ext.jinja.PyPugJSExtension` as extension to the environment of the app
 
 .. code:: python
 
-    app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
+    app.jinja_env.add_extension('pypugjs.ext.jinja.PyPugJSExtension')
 
 
 Pyramid
@@ -100,7 +102,7 @@ Adjust your "your_project/__init__.py" and add the following line somewhere to i
 
 .. code:: python
 
-    config.include('pyjade.ext.pyramid')
+    config.include('pypugjs.ext.pyramid')
 
 
 Tornado Templates
@@ -111,7 +113,7 @@ Append this after importing tornado.template
 .. code:: python
 
     from tornado import template
-    from pyjade.ext.tornado import patch_tornado
+    from pypugjs.ext.tornado import patch_tornado
     patch_tornado()
 
     (...)
@@ -120,8 +122,8 @@ Append this after importing tornado.template
 Syntax
 ======
 
-Exactly the same as the Jade Node.js module (except of cases, which are not implemented)
-https://github.com/visionmedia/jade/blob/master/README.md
+Generally the same as the PugJS Node.js module (except of cases and several other features, which are not implemented)
+https://github.com/pugjs/pug/blob/master/README.md
 
 
 Example
@@ -140,9 +142,9 @@ This code
              bar()
           }
       body
-        h1.title Jade - node template engine
+        h1.title PugJS - node template engine
         #container
-          if youAreUsingJade
+          if youAreUsingPugJS
             p You are amazing
           else
             p Get on it!
@@ -163,9 +165,9 @@ Converts to
         </script>
       </head>
       <body>
-        <h1 class="title">Jade - node template engine</h1>
+        <h1 class="title">PugJS - node template engine</h1>
         <div id="container">
-          {%if youAreUsingJade%}
+          {%if youAreUsingPugJS%}
             <p>You are amazing</p>
           {%else%}
             <p>Get on it!</p>
@@ -179,13 +181,13 @@ Register filters
 ================
 
 If you want to register a function as a filter, you only have to
-decorate the function with ``pyjade.register_filter("filter_name")``
+decorate the function with ``pypugjs.register_filter("filter_name")``
 
 .. code:: python
 
-    import pyjade
+    import pypugjs
 
-    @pyjade.register_filter('capitalize')
+    @pypugjs.register_filter('capitalize')
     def capitalize(text,ast):
       return text.capitalize()
 
@@ -201,4 +203,4 @@ You can do the tests with::
 
 TODOs and BUGS
 ==============
-See: http://github.com/syrusakbary/pyjade/issues
+See: http://github.com/matannoam/pypugjs/issues
