@@ -7,7 +7,11 @@ try:
 except ImportError:  # Django < 1.9
     from django.template.base import TemplateDoesNotExist
 
-from django.template.loader import BaseLoader
+try:
+    from django.template.loaders.base import Loader as BaseLoader
+except ImportError:  # Django < 1.9
+    from django.template.loader import BaseLoader
+
 try:
     from django.template.engine import Engine
 except ImportError:  # Django < 1.8
@@ -40,9 +44,14 @@ except ImportError:  # Django >= 1.9
 class Loader(BaseLoader):
     is_usable = True
 
-    def __init__(self, loaders):
+    def __init__(self, *args):
         self.template_cache = {}
-        self._loaders = loaders
+        try:
+            # Django 1.10 args = (engine, loaders)
+            self._loaders = args[1]
+        except IndexError:
+            # Django <= 1.7 args = (loaders, )
+            self._loaders = args[0]
         self._cached_loaders = []
 
         try:
