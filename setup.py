@@ -1,13 +1,13 @@
 from setuptools import setup,find_packages
 
 setup(name='pypugjs',
-      version='4.0.0',
+      version='4.1.0',
       download_url='git@github.com:matannoam/pypugjs.git',
       packages=find_packages(),
-      author='Syrus Akbary',
-      author_email='me@syrusakbary.com',
+      author='Matan Noam Shavit',
+      author_email='matannoam@gmail.com',
       description='PugJS syntax template adapter for Django, Jinja2, Mako and '
-                  'Tornado templates',
+                  'Tornado templates - copy of PyJade with the name changed',
       long_description=open('README.rst').read(),
       keywords='pug pugjs template converter',
       url='http://github.com/matannoam/pypugjs',
