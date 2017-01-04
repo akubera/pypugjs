@@ -22,7 +22,6 @@ from django.conf import settings
 from .compiler import Compiler
 
 from pypugjs.utils import process
-# from django.template.loaders.cached import Loader
 
 
 try:
@@ -121,12 +120,6 @@ class Loader(BaseLoader):
             self.template_cache[key] = template
         return self.template_cache[key], None
 
-    # def _preprocess(self, source, name, filename=None):
-    #     parser = Parser(source,filename=filename)
-    #     block = parser.parse()
-    #     compiler = Compiler(block)
-    #     return compiler.compile().strip()
-
     def reset(self):
-        "Empty the template cache."
+        """Empty the template cache."""
         self.template_cache.clear()
