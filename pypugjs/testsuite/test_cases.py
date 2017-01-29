@@ -164,21 +164,21 @@ def html_process(src, filename):
 
 processors['Html'] = html_process
 
-
 def run_case(case, process):
+    import codecs
     global processors
     processor = processors[process]
-    pugjs_file = open('cases/%s.pug' % case)
-    pugjs_src = pugjs_file.read()
-    if isinstance(pugjs_src, six.binary_type):
-        pugjs_src = pugjs_src.decode('utf-8')
-    pugjs_file.close()
+    with codecs.open('cases/%s.pug'%case, encoding='utf-8') as pugjs_file:
+        pugjs_src = pugjs_file.read()
+        if isinstance(pugjs_src, six.binary_type):
+            pugjs_src = pugjs_src.decode('utf-8')
+        pugjs_file.close()
 
-    html_file = open('cases/%s.html' % case)
-    html_src = html_file.read().strip('\n')
-    if isinstance(html_src, six.binary_type):
-        html_src = html_src.decode('utf-8')
-    html_file.close()
+    with codecs.open('cases/%s.html'%case, encoding='utf-8') as html_file:
+        html_src = html_file.read().strip('\n')
+        if isinstance(html_src, six.binary_type):
+            html_src = html_src.decode('utf-8')
+        html_file.close()
     try:
         processed_pugjs = processor(pugjs_src, '%s.pug' % case).strip('\n')
         print('PROCESSED\n' + processed_pugjs, len(processed_pugjs))
