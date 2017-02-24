@@ -43,9 +43,14 @@ except ImportError:  # Django >= 1.9
 class Loader(BaseLoader):
     is_usable = True
 
-    def __init__(self, engine, loaders):
+    def __init__(self, *args):
         self.template_cache = {}
-        self._loaders = loaders
+        try:
+            # Django 1.10 args = (engine, loaders)
+            self._loaders = args[1]
+        except IndexError:
+            # Django <= 1.7 args = (loaders, )
+            self._loaders = args[0]
         self._cached_loaders = []
 
         try:
