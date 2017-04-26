@@ -1,7 +1,7 @@
 from setuptools import setup,find_packages
 
 setup(name='pypugjs',
-      version='4.2.1',
+      version='4.2.2',
       download_url='git@github.com:matannoam/pypugjs.git',
       packages=find_packages(),
       author='Matan Noam Shavit',
