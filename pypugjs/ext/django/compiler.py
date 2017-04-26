@@ -71,8 +71,6 @@ except ImportError:
     # TEMPLATES['OPTIONS']['builtins'] = ['pypugjs.ext.django.templatetags']
     pass
 
-from django.utils.translation import trans_real
-
 try:
     from django.utils.encoding import force_text as to_text
 except ImportError:
@@ -89,7 +87,12 @@ def decorate_templatize(func):
 
     return templatize
 
-trans_real.templatize = decorate_templatize(trans_real.templatize)
+try:
+    from django.utils.translation import trans_real
+    trans_real.templatize = decorate_templatize(trans_real.templatize)
+except AttributeError:
+    from django.utils import translation
+    trans_real.templatize = decorate_templatize(translation.templatize)
 
 try:
     from django.contrib.markup.templatetags.markup import markdown
