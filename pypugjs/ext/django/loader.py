@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 import hashlib
 import os
+import re
 
 from django.conf import settings
 from django.conf import settings
@@ -37,6 +38,24 @@ class Loader(BaseLoader):
     def get_dirs(self):
         return self.dirs if self.dirs is not None else self.engine.dirs
 
+    def include_pug_sources(self, contents):
+        """Lets fetch all pug includes to enable included mixins"""
+
+        # def preprocess(self, source, name, filename=None):
+        print('IINNNCCCLLUUUDDDIIIIINNNNNNNNGGGGGGGGG..................')
+        # if 'include' in contents:
+        #     match = re.search(r'(^|\n)\s*include (.*)$', contents)
+        #     import ipdb; ipdb.set_trace()
+        #     match.groups()[0]
+            # source = re.sub(pattern, replace, source)
+
+        # if (not name or
+        #    (name and not os.path.splitext(name)[1] in self.file_extensions)):
+        #     return source
+        # return process(source,filename=name,compiler=Compiler,**self.options)
+
+        return contents
+
     def get_contents(self, origin):
 
         contents = self.template_cache.get(origin.name)
@@ -44,6 +63,7 @@ class Loader(BaseLoader):
             if os.path.splitext(origin.template_name)[1] in ('.pug', '.jade'):
                 try:
                     contents = origin.loader.get_contents(origin)
+                    contents = self.include_pug_sources(contents)
                     contents = process(contents, filename=origin.template_name, compiler=Compiler)
                 except FileNotFoundError:
                     raise TemplateDoesNotExist(origin)

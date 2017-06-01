@@ -1,12 +1,15 @@
 from __future__ import absolute_import
-from .lexer import Lexer
-from . import nodes
+
 import six
 
+from . import nodes
+from .lexer import Lexer
+
+
 class Parser(object):
-    def __init__(self,str,filename=None,**options):
-        self.input = str
-        self.lexer = Lexer(str,**options)
+    def __init__(self, source, filename=None, **options):
+        self.input = source
+        self.lexer = Lexer(source, **options)
         self.filename = filename
         self.bloks = {}
         self.options = options
@@ -14,15 +17,17 @@ class Parser(object):
         self.extending = False
         self._spaces = None
 
-    def context(self,parser):
-        if parser: self.context.append(parser)
-        else: self.contexts.pop()
+    def context(self, parser):
+        if parser:
+            self.contexts.append(parser)
+        else:
+            self.contexts.pop()
 
     def advance(self):
         return self.lexer.advance()
 
-    def skip(self,n):
-        while n>1: # > 0?
+    def skip(self, n):
+        while n > 1:  # > 0?
             self.advance()
             n -= 1
 
@@ -33,36 +38,40 @@ class Parser(object):
     def line(self):
         return self.lexer.lineno
 
-    def lookahead(self,n):
+    def lookahead(self, n):
         return self.lexer.lookahead(n)
 
     def parse(self):
         block = nodes.Block()
-        parser = None
         block.line = self.line()
 
         while 'eos' != self.peek().type:
-            if 'newline' == self.peek().type: self.advance()
-            else: block.append(self.parseExpr())
+            if 'newline' == self.peek().type:
+                self.advance()
+            else:
+                block.append(self.parseExpr())
 
-        parser = self.extending
-        if parser:
-            self.context(parser)
-            ast = parser.parse()
-            self.context()
-            return ast
+        # TODO: this is kinda broken and unused what is it doing?
+        # parser = self.extending
+        # if parser:
+        #     self.context(parser)
+        #     ast = parser.parse()
+        #     self.context(parser)
+        #     return ast
 
         return block
 
-    def expect(self,type):
+    def expect(self, string):
         t = self.peek().type
-        if t == type: return self.advance()
+        if t == string:
+            return self.advance()
         else:
             raise Exception('expected "%s" but got "%s" in file %s on line %d' %
-                            (type, t, self.filename, self.line()))
+                            (string, t, self.filename, self.line()))
 
-    def accept(self,type):
-        if self.peek().type == type: return self.advance()
+    def accept(self, attrs):
+        if self.peek().type == attrs:
+            return self.advance()
 
     def parseExpr(self):
         t = self.peek().type
@@ -71,17 +80,17 @@ class Parser(object):
             block = nodes.Block()
             block._yield = True
             return block
-        elif t in ('id','class'):
+        elif t in ('id', 'class'):
             tok = self.advance()
-            new_div = self.lexer.tok('tag','div')
+            new_div = self.lexer.tok('tag', 'div')
             new_div.inline_level = tok.inline_level
             self.lexer.stash.append(new_div)
             self.lexer.stash.append(tok)
             return self.parseExpr()
 
-        funcName = 'parse%s'%t.capitalize()
-        if hasattr(self,funcName):
-            return getattr(self,funcName)()
+        funcName = 'parse%s' % t.capitalize()
+        if hasattr(self, funcName):
+            return getattr(self, funcName)()
         else:
             raise Exception('unexpected token "%s" in file %s on line %d' %
                             (t, self.filename, self.line()))
@@ -99,7 +108,7 @@ class Parser(object):
         return node
 
     def parseBlockExpansion(self):
-        if ':'== self.peek().type:
+        if ':' == self.peek().type:
             self.advance()
             return nodes.Block(self.parseExpr())
         else:
@@ -107,15 +116,15 @@ class Parser(object):
 
     def parseAssignment(self):
         tok = self.expect('assignment')
-        return nodes.Assignment(tok.name,tok.val)
+        return nodes.Assignment(tok.name, tok.val)
 
     def parseCode(self):
         tok = self.expect('code')
-        node = nodes.Code(tok.val,tok.buffer,tok.escape) #tok.escape
-        block,i = None,1
+        node = nodes.Code(tok.val, tok.buffer, tok.escape)  # tok.escape
+        block, i = None, 1
         node.line = self.line()
-        while self.lookahead(i) and 'newline'==self.lookahead(i).type:
-            i+= 1
+        while self.lookahead(i) and 'newline' == self.lookahead(i).type:
+            i += 1
         block = 'indent' == self.lookahead(i).type
         if block:
             self.skip(i-1)
@@ -125,10 +134,10 @@ class Parser(object):
     def parseComment(self):
         tok = self.expect('comment')
 
-        if 'indent'==self.peek().type:
+        if 'indent' == self.peek().type:
             node = nodes.BlockComment(tok.val, self.block(), tok.buffer)
         else:
-            node = nodes.Comment(tok.val,tok.buffer)
+            node = nodes.Comment(tok.val, tok.buffer)
 
         node.line = self.line()
         return node
@@ -192,7 +201,7 @@ class Parser(object):
         if args is None:
             args = ""
         block = self.block() if 'indent' == self.peek().type else None
-        return nodes.Mixin(name,args,block,True)
+        return nodes.Mixin(name, args, block, True)
 
     def parseMixin(self):
         tok = self.expect('mixin')
@@ -201,13 +210,13 @@ class Parser(object):
         if args is None:
             args = ""
         block = self.block() if 'indent' == self.peek().type else None
-        return nodes.Mixin(name,args,block,block is None)
+        return nodes.Mixin(name, args, block, block is None)
 
     def parseBlock(self):
         block = self.expect('block')
         mode = block.mode
         name = block.val.strip()
-        block = self.block(cls=nodes.CodeBlock) if 'indent'==self.peek().type else nodes.CodeBlock(nodes.Literal(''))
+        block = self.block(cls=nodes.CodeBlock) if 'indent' == self.peek().type else nodes.CodeBlock(nodes.Literal(''))
         block.mode = mode
         block.name = name
         return block
@@ -219,33 +228,38 @@ class Parser(object):
     def parseTextBlock(self, tag=None):
         text = nodes.Text()
         text.line = self.line()
-        if (tag):
-            text.parent == tag
+        if tag:
+            # TODO: needs a test because this line was text.parent == tag
+            # its untested and i don't know what it shall do right now
+            text.parent = tag
         spaces = self.expect('indent').val
-        if not self._spaces: self._spaces = spaces
-        indent = ' '*(spaces-self._spaces)
+        if not self._spaces:
+            self._spaces = spaces
+        indent = ' ' * (spaces - self._spaces)
         while 'outdent' != self.peek().type:
             t = self.peek().type
-            if 'newline'==t:
+            if 'newline' == t:
                 text.append('\n')
                 self.advance()
-            elif 'indent'==t:
+            elif 'indent' == t:
                 text.append('\n')
-                for node in self.parseTextBlock().nodes: text.append(node)
+                for node in self.parseTextBlock().nodes:
+                    text.append(node)
                 text.append('\n')
             else:
                 text.append(indent+self.advance().val)
 
-        if spaces == self._spaces: self._spaces = None
+        if spaces == self._spaces:
+            self._spaces = None
         self.expect('outdent')
         return text
 
-    def block(self,cls=nodes.Block):
+    def block(self, cls=nodes.Block):
         block = cls()
         block.line = self.line()
         self.expect('indent')
         while 'outdent' != self.peek().type:
-            if 'newline'== self.peek().type:
+            if 'newline' == self.peek().type:
                 self.advance()
             else:
                 block.append(self.parseExpr())
@@ -276,9 +290,10 @@ class Parser(object):
 
     def parseTag(self):
         i = 2
-        if 'attrs'==self.lookahead(i).type: i += 1
+        if 'attrs' == self.lookahead(i).type:
+            i += 1
 
-        if ':'==self.lookahead(i).type:
+        if ':' == self.lookahead(i).type:
             if 'indent' == self.lookahead(i+1).type:
                 raise Exception('unexpected token "indent" in file %s on line %d' %
                                 (self.filename, self.line()))
@@ -292,36 +307,40 @@ class Parser(object):
 
         while True:
             t = self.peek().type
-            if t in ('id','class'):
+            if t in ('id', 'class'):
                 tok = self.advance()
-                tag.setAttribute(tok.type,'"%s"'%tok.val,True)
+                tag.setAttribute(tok.type, '"%s"' % tok.val, True)
                 continue
-            elif 'attrs'==t:
+            elif 'attrs' == t:
                 tok = self.advance()
-                for n,v in six.iteritems(tok.attrs):
-                    tag.setAttribute(n,v,n in tok.static_attrs)
+                for n, v in six.iteritems(tok.attrs):
+                    tag.setAttribute(n, v, n in tok.static_attrs)
                 continue
             else:
                 break
 
         v = self.peek().val
-        if '.'== v:
+        if '.' == v:
             dot = tag.textOnly = True
             self.advance()
-        elif '<'== v:  # For inline elements
+        elif '<' == v:  # For inline elements
             tag.inline = True
             self.advance()
 
         t = self.peek().type
-        if 'code'==t: tag.code = self.parseCode()
-        elif ':'==t:
+        if 'code' == t:
+            tag.code = self.parseCode()
+        elif ':' == t:
             self.advance()
             tag.block = nodes.Block()
             tag.block.append(self.parseExpr())
-        elif 'string'==t: self.processTagText(tag)
-        elif 'text'==t: tag.text = self.parseText()
+        elif 'string' == t:
+            self.processTagText(tag)
+        elif 'text' == t:
+            tag.text = self.parseText()
 
-        while 'newline' == self.peek().type: self.advance()
+        while 'newline' == self.peek().type:
+            self.advance()
 
         if 'indent' == self.peek().type:
             if tag.textOnly:

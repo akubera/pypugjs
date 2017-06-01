@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.utils.encoding import force_text as to_text
+from django.utils.translation import template
 
 from pypugjs import Compiler as _Compiler, register_filter
 from pypugjs.exceptions import CurrentlyNotSupported
@@ -6,8 +8,25 @@ from pypugjs.utils import process
 
 
 class Compiler(_Compiler):
-    auto_close_code = 'if,ifchanged,ifequal,ifnotequal,for,block,filter,autoescape,with,trans,' \
-                      'blocktrans,spaceless,comment,cache,localize,compress,verbatim'.split(',')
+    auto_close_code = [
+        'autoescape',
+        'cache',
+        'comment',
+        'compress',
+        'block',
+        'blocktrans',
+        'filter',
+        'for',
+        'if',
+        'ifchanged',
+        'ifequal',
+        'ifnotequal',
+        'localize',
+        'spaceless',
+        'trans',
+        'with',
+        'verbatim',
+    ]
     useRuntime = True
 
     def __init__(self, node, **options):
@@ -59,9 +78,6 @@ class Compiler(_Compiler):
         return "{%% __pypugjs_attrs %s %%}" % attrs
 
 
-from django.utils.encoding import force_text as to_text
-
-
 def decorate_templatize(func):
     def templatize(src, origin=None, charset=None):
         src = to_text(src, charset or settings.FILE_CHARSET)
@@ -73,7 +89,7 @@ def decorate_templatize(func):
 
     return templatize
 
-from django.utils.translation import template
+
 # fix translation for pug templates
 template.templatize = decorate_templatize(template.templatize)
 

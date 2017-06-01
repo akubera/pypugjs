@@ -1,4 +1,7 @@
 from __future__ import print_function
+
+from django.template import Engine, TemplateDoesNotExist
+
 import pypugjs
 import pypugjs.ext.html
 from pypugjs.utils import process
@@ -7,8 +10,9 @@ import six
 
 from nose import with_setup
 
-processors =  {}
+processors = {}
 jinja_env = None
+
 
 def teardown_func():
     pass
@@ -18,7 +22,8 @@ try:
     from jinja2 import Environment, FileSystemLoader
     from pypugjs.ext.jinja import PyPugJSExtension
     jinja_env = Environment(extensions=[PyPugJSExtension], loader=FileSystemLoader('cases/'))
-    def jinja_process (src, filename):
+
+    def jinja_process(src, filename):
         global jinja_env
         template = jinja_env.get_template(filename)
         return template.render()
@@ -31,10 +36,12 @@ except ImportError:
 try:
     from jinja2 import Environment, FileSystemLoader
     from pypugjs.ext.jinja import PyPugJSExtension
-    jinja_env = Environment(extensions=[PyPugJSExtension], loader=FileSystemLoader('cases/'),
-			variable_start_string = "{%#.-.**", variable_end_string="**.-.#%}"
+    jinja_env = Environment(
+        extensions=[PyPugJSExtension], loader=FileSystemLoader('cases/'),
+        variable_start_string="{%#.-.**", variable_end_string="**.-.#%}"
     )
-    def jinja_process_variable_start_string (src, filename):
+
+    def jinja_process_variable_start_string(src, filename):
         global jinja_env
         template = jinja_env.get_template(filename)
         return template.render()
@@ -49,9 +56,10 @@ try:
     patch_tornado()
 
     loader = tornado.template.Loader('cases/')
-    def tornado_process (src, filename):
+
+    def tornado_process(src, filename):
         global loader, tornado
-        template = tornado.template.Template(src,name='_.pug',loader=loader)
+        template = tornado.template.Template(src, name='_.pug', loader=loader)
         generated = template.generate(missing=None)
         if isinstance(generated, six.binary_type):
             generated = generated.decode("utf-8")
@@ -61,6 +69,8 @@ try:
 except ImportError:
     pass
 
+# django tests
+##################################################################################
 try:
     import django
     from django.conf import settings
@@ -75,7 +85,6 @@ try:
                         'django.template.context_processors.request',
                         'django.contrib.auth.context_processors.auth',
                         'django.contrib.messages.context_processors.messages',
-                        'django.core.context_processors.request'
                     ],
                     'loaders': [
                         ('pypugjs.ext.django.Loader', (
@@ -106,12 +115,17 @@ try:
 
     import django.template
     import django.template.loader
-    from pypugjs.ext.django import Compiler as DjangoCompiler
+    from pypugjs.ext.django import Compiler as DjangoCompiler, Loader
+
 
     def django_process(src, filename):
-        compiled = process(src, filename=filename, compiler=DjangoCompiler)
-        print(compiled)
-        t = django.template.Template(compiled)
+        # actually use the django loader to get the sources
+        loader = Loader(
+            Engine.get_default(),
+            config['TEMPLATES'][0]['OPTIONS']['loaders']
+        )
+
+        t = loader.get_template(filename)
 
         ctx = django.template.Context()
         return t.render(ctx)
@@ -124,10 +138,13 @@ try:
     import pypugjs.ext.mako
     import mako.template
     from mako.lookup import TemplateLookup
-    dirlookup = TemplateLookup(directories=['cases/'],preprocessor=pypugjs.ext.mako.preprocessor)
+    dirlookup = TemplateLookup(
+        directories=['cases/'], preprocessor=pypugjs.ext.mako.preprocessor)
 
     def mako_process(src, filename):
-        t = mako.template.Template(src, lookup=dirlookup,preprocessor=pypugjs.ext.mako.preprocessor, default_filters=['decode.utf8'])
+        t = mako.template.Template(
+            src, lookup=dirlookup, preprocessor=pypugjs.ext.mako.preprocessor,
+            default_filters=['decode.utf8'])
         return t.render()
 
     processors['Mako'] = mako_process
@@ -154,35 +171,35 @@ processors['Html'] = html_process
 def run_case(case, process):
     global processors
     processor = processors[process]
-    pugjs_file = open('cases/%s.pug'%case)
+    pugjs_file = open('cases/%s.pug' % case)
     pugjs_src = pugjs_file.read()
     if isinstance(pugjs_src, six.binary_type):
         pugjs_src = pugjs_src.decode('utf-8')
     pugjs_file.close()
 
-    html_file = open('cases/%s.html'%case)
+    html_file = open('cases/%s.html' % case)
     html_src = html_file.read().strip('\n')
     if isinstance(html_src, six.binary_type):
         html_src = html_src.decode('utf-8')
     html_file.close()
     try:
-        processed_pugjs = processor(pugjs_src, '%s.pug'%case).strip('\n')
-        print('PROCESSED\n',processed_pugjs,len(processed_pugjs))
-        print('EXPECTED\n',html_src,len(html_src))
-        assert processed_pugjs==html_src
+        processed_pugjs = processor(pugjs_src, '%s.pug' % case).strip('\n')
+        print('PROCESSED\n', processed_pugjs, len(processed_pugjs))
+        print('EXPECTED\n', html_src, len(html_src))
+        assert processed_pugjs == html_src
 
     except CurrentlyNotSupported:
         pass
 
 
 exclusions = {
-    'Html': set([
-        'mixins', 'mixin.blocks', 'layout', 'unicode', 'attrs.object']),
-    'Mako': set(['layout']),
-    'Tornado': set(['layout']),
-    'Jinja2': set(['layout']),
-    'Jinja2-variable_start_string': set(['layout']),
-    'Django': set(['layout'])}
+    'Html': {'mixins', 'mixin.blocks', 'layout', 'unicode', 'attrs.object'},
+    'Mako': {'layout', 'include_mixin'},
+    'Tornado': {'layout', 'include_mixin'},
+    'Jinja2': {'layout'},
+    'Jinja2-variable_start_string': {'layout'},
+    'Django': {'layout', 'include_mixin'}
+}
 
 
 @with_setup(setup_func, teardown_func)
@@ -190,12 +207,11 @@ def test_case_generator():
     global processors
 
     import os
-    import sys
     for dirname, dirnames, filenames in os.walk('cases/'):
         # raise Exception(filenames)
-        filenames = filter(lambda x:x.endswith('.pug'),filenames)
-        filenames = list(map(lambda x:x.replace('.pug',''),filenames))
+        filenames = filter(lambda x: x.endswith('.pug'), filenames)
+        filenames = list(map(lambda x: x.replace('.pug', ''), filenames))
         for processor in processors.keys():
             for filename in filenames:
-                if not filename in exclusions[processor]:
-                    yield run_case, filename,processor
+                if filename not in exclusions[processor]:
+                    yield run_case, filename, processor

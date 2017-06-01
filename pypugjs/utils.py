@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+
 try:
     from itertools import izip, imap
 except:
@@ -6,9 +7,8 @@ except:
 from copy import deepcopy
 import six
 
-from .compiler import Compiler
-
 missing = object()
+
 
 class odict(dict):
     """
@@ -220,11 +220,13 @@ class odict(dict):
     __copy__ = copy
     __iter__ = iterkeys
 
-from .parser import Parser
-from .ext.html import Compiler as HTMLCompiler
 
-def process(src,filename=None,parser=Parser,compiler=HTMLCompiler, **kwargs):
-    _parser = parser(src,filename=filename)
+from .ext.html import Compiler as HTMLCompiler
+from .parser import Parser
+
+
+def process(src, filename=None, parser=Parser, compiler=HTMLCompiler, **kwargs):
+    _parser = parser(src, filename=filename)
     block = _parser.parse()
     _compiler = compiler(block, **kwargs)
     return _compiler.compile().strip()
