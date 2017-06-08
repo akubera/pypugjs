@@ -46,11 +46,11 @@ class Loader(BaseLoader):
     def __init__(self, *args):
         self.template_cache = {}
         try:
-          # Django 1.10 args = (engine, loaders)
-          self._loaders = args[1]
+            # Django 1.10 args = (engine, loaders)
+            self._loaders = args[1]
         except IndexError:
-          # Django <= 1.7 args = (loaders, )
-          self._loaders = args[0]
+            # Django <= 1.7 args = (loaders, )
+            self._loaders = args[0]
         self._cached_loaders = []
 
         try:
