@@ -55,21 +55,8 @@ class Loader(BaseLoader):
 
     def get_template_sources(self, template_name):
         """
-        Return an Origin object pointing to an absolute path in each directory
-        in template_dirs. For security reasons, if a path doesn't lie inside
-        one of the template_dirs it is excluded from the result set.
+        Only forward the internal loaders sources.
         """
         for loader in self.loaders:
-            for template_dir in loader.get_dirs():
-                try:
-                    name = safe_join(template_dir, template_name)
-                except SuspiciousFileOperation:
-                    # The joined path was located outside of this template_dir
-                    # (it might be inside another one, so this isn't fatal).
-                    continue
-
-                yield Origin(
-                    name=name,
-                    template_name=template_name,
-                    loader=loader,
-                )
+            for origin in loader.get_template_sources(template_name):
+                yield origin
