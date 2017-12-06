@@ -1,125 +1,75 @@
 from __future__ import absolute_import
+
 import hashlib
-
-from django.template.base import Template
-try:
-    from django.template.exceptions import TemplateDoesNotExist
-except ImportError:  # Django < 1.9
-    from django.template.base import TemplateDoesNotExist
-
-try:
-    from django.template.loaders.base import Loader as BaseLoader
-except ImportError:  # Django < 1.9
-    from django.template.loader import BaseLoader
-
-try:
-    from django.template.engine import Engine
-except ImportError:  # Django < 1.8
-    pass
 import os
 
 from django.conf import settings
-from .compiler import Compiler
-
+from django.conf import settings
+from django.core.exceptions import SuspiciousFileOperation
+from django.template import TemplateDoesNotExist, Origin
+from django.template.loaders.base import Loader as BaseLoader
+from django.utils._os import safe_join
+from django.utils.functional import cached_property
+from pypugjs import process
+from pypugjs.ext.django import Compiler
 from pypugjs.utils import process
 
-
-try:
-    from django.template.loader import make_origin
-except ImportError:  # Django >= 1.9
-    try:
-        from django.template import Origin
-
-        def make_origin(display_name, loader, name, dirs):
-            return Origin(
-                name=display_name,
-                template_name=name,
-                loader=loader,
-            )
-    except ImportError:  # Django 1.8.x
-        make_origin = Engine.get_default().make_origin
+from .compiler import Compiler
 
 
 class Loader(BaseLoader):
     is_usable = True
 
-    def __init__(self, *args):
+    def __init__(self, engine, loaders, dirs=None):
+        self.dirs = dirs
+        self.engine = engine
         self.template_cache = {}
-        try:
-            # Django 1.10 args = (engine, loaders)
-            self._loaders = args[1]
-        except IndexError:
-            # Django <= 1.7 args = (loaders, )
-            self._loaders = args[0]
-        self._cached_loaders = []
+        self._loaders = loaders
 
-        try:
-            from django.template.loader import find_template_loader as _find_template_loader
-        except:
-            _find_template_loader = Engine.get_default().find_template_loader
-        self._find_template_loader = _find_template_loader
-
-    @property
+    @cached_property
     def loaders(self):
-        # Resolve loaders on demand to avoid circular imports
-        if not self._cached_loaders:
-            # Set self._cached_loaders atomically. Otherwise, another thread
-            # could see an incomplete list. See #17303.
-            cached_loaders = []
-            for loader in self._loaders:
-                cached_loaders.append(self._find_template_loader(loader))
-            self._cached_loaders = cached_loaders
-        return self._cached_loaders
-
-    def find_template(self, name, dirs=None):
-        for loader in self.loaders:
-            try:
-                template, display_name = loader(name, dirs)
-                return (template, make_origin(display_name, loader,
-                                              name, dirs))
-            except TemplateDoesNotExist:
-                pass
-        raise TemplateDoesNotExist(name)
-
-    def load_template_source(self, template_name, template_dirs=None):
-        for loader in self.loaders:
-            try:
-                return loader.load_template_source(template_name,
-                                                   template_dirs)
-            except TemplateDoesNotExist:
-                pass
-        raise TemplateDoesNotExist(template_name)
-
-    def load_template(self, template_name, template_dirs=None):
-        key = template_name
-        if template_dirs:
-            # If template directories were specified, use a hash to differentiate
-            key = '-'.join([template_name, hashlib.sha1('|'.join(template_dirs)).hexdigest()])
-
-        if settings.DEBUG or key not in self.template_cache:
-
-            if os.path.splitext(template_name)[1] in ('.pug',):
-                try:
-                    source, display_name = self.load_template_source(template_name, template_dirs)
-                    source = process(source,filename=template_name,compiler=Compiler)
-                    origin = make_origin(display_name, self.load_template_source, template_name, template_dirs)
-                    template = Template(source, origin, template_name)
-                except NotImplementedError:
-                    template, origin = self.find_template(template_name, template_dirs)
-            else:
-                template, origin = self.find_template(template_name, template_dirs)
-            if not hasattr(template, 'render'):
-                try:
-                    template = Template(process(source,filename=template_name,compiler=Compiler), origin, template_name)
-                except (TemplateDoesNotExist, UnboundLocalError):
-                    # If compiling the template we found raises TemplateDoesNotExist,
-                    # back off to returning he source and display name for the template
-                    # we were asked to load. This allows for correct identification (later)
-                    # of the actual template that does not exist.
-                    return template, origin
-            self.template_cache[key] = template
-        return self.template_cache[key], None
+        return self.engine.get_template_loaders(self._loaders)
 
     def reset(self):
-        """Empty the template cache."""
+        """ Empty the template cache. """
         self.template_cache.clear()
+
+    def get_dirs(self):
+        return self.dirs if self.dirs is not None else self.engine.dirs
+
+    def get_contents(self, origin):
+
+        contents = self.template_cache.get(origin.name)
+        if settings.DEBUG or not contents:
+            if os.path.splitext(origin.template_name)[1] in ('.pug', '.jade'):
+                try:
+                    contents = origin.loader.get_contents(origin)
+                    contents = process(contents, filename=origin.template_name, compiler=Compiler)
+                except FileNotFoundError:
+                    raise TemplateDoesNotExist(origin)
+            else:
+                contents = origin.loader.get_contents(origin)
+            self.template_cache[origin.name] = contents
+
+        return contents
+
+    def get_template_sources(self, template_name):
+        """
+        Return an Origin object pointing to an absolute path in each directory
+        in template_dirs. For security reasons, if a path doesn't lie inside
+        one of the template_dirs it is excluded from the result set.
+        """
+        for loader in self.loaders:
+            for template_dir in loader.get_dirs():
+                try:
+                    name = safe_join(template_dir, template_name)
+                except SuspiciousFileOperation:
+                    # The joined path was located outside of this template_dir
+                    # (it might be inside another one, so this isn't fatal).
+                    continue
+
+                yield Origin(
+                    name=name,
+                    template_name=template_name,
+                    loader=loader,
+                )
