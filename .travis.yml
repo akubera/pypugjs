@@ -2,10 +2,11 @@ language: python
 sudo: false
 python:
   - "2.7"
+  - "3.6"
 cache:
   directories:
-  - .cache/pip/
-  - $HOME/.cache/pip
+    - .cache/pip/
+    - $HOME/.cache/pip
 
 install:
 - |
@@ -20,3 +21,5 @@ env:
     - DJANGO_VERSION=1.10
     - DJANGO_VERSION=1.11
     - DJANGO_VERSION=2.0
+    allow_failures:
+      - python: "2.7"
