@@ -1,5 +1,7 @@
 from __future__ import print_function
+
 import pypugjs
+
 a = pypugjs.Parser('''doctype 5
 html
     head: title Hello from flask
@@ -11,7 +13,6 @@ html
         else
             h1 Hello World!''')
 block = a.parse()
-import pypugjs.ext.jinja
 compiler = pypugjs.ext.jinja.Compiler(block)
 print(compiler.compile())
 # OUT: <!DOCTYPE html>

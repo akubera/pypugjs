@@ -36,12 +36,12 @@ class Compiler(_Compiler):
 
             if not code.buffer:
               codeTag = code.val.strip().split(' ',1)[0]
-              if codeTag in self.autocloseCode:
+              if codeTag in self.auto_close_code:
                   self.buf.append('<% } %>')
         elif not code.buffer:
             self.buf.append('; %>') #for loop
-          
- 
+
+
     def visitEach(self,each):
         #self.buf.append('{%% for %s in %s %%}'%(','.join(each.keys),each.obj))
         __i = self._i.next()
@@ -107,6 +107,6 @@ class Compiler(_Compiler):
             for next in conditional.next:
               self.visitConditional(next)
         if conditional.type in ['if','unless']: self.buf.append('\n<% } %>\n')
-        
+
     def interpolate(self, text, escape=True):
         return self._interpolate(text,lambda x:'<%%= %s %%>'%x)

@@ -2,11 +2,16 @@
 PyPugJS
 =======
 
-**PyPugJS is just a fork of** `PyJade <http://github.com/syrusakbary/pyjade>`_
+**PyPugJS is a fork of** `PyJade <http://github.com/syrusakbary/pyjade>`_
 **with the name Jade changed to** `PugsJS <https://github.com/pugjs/pug>`_.
 
-PyPugJS is a high performance port of PugJS for python, that converts any .pug source to the each Template-language (Django, Jinja2, Mako or Tornado).
+**Additional disclaimer:** Since the original pypugjs died i took the liberty to keeping it alive, because
+since starting to work with the jade compile for node i hate writing HTML and want to continue using it in my Django projects.
+I will keep the existing non Django stuff inside the project but i will only continue to support Django myself.
+Tornado, Mako etc. support will be welcome tho!
 
+PyPugJS is a high performance port of PugJS for python, that converts any .pug source into different
+Template-languages (Django, Jinja2, Mako or Tornado).
 
 UTILITIES
 =========
@@ -18,7 +23,7 @@ To simply output the conversion to your console::
 INSTALLATION
 ============
 
-First, you must do::
+To install pypugjs::
 
     pip install pypugjs
 
@@ -41,14 +46,15 @@ In `settings.py`, add a `loader` to `TEMPLATES` like so:
     TEMPLATES = [
         {
             'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': [],
+            'DIRS': [
+                os.path.join(BASE_DIR, 'templates')
+            ],
             'OPTIONS': {
                 'context_processors': [
                     'django.template.context_processors.debug',
                     'django.template.context_processors.request',
                     'django.contrib.auth.context_processors.auth',
                     'django.contrib.messages.context_processors.messages',
-                    'django.core.context_processors.request'
                 ],
                 'loaders': [
                     # PyPugJS part:   ##############################
@@ -57,11 +63,12 @@ In `settings.py`, add a `loader` to `TEMPLATES` like so:
                         'django.template.loaders.app_directories.Loader',
                     ))
                 ],
-                'builtins': ['pypugjs.ext.django.templatetags'],  # Remove this line for Django 1.8
+                'builtins': [
+                    'pypugjs.ext.django.templatetags',
+                ],
             },
         },
     ]
-
 
 Jinja2
 ------
@@ -198,10 +205,10 @@ TESTING
 
 You must have `nose` package installed.
 You can do the tests with::
-    
+
     ./test.sh
 
 
 TODOs and BUGS
 ==============
-See: http://github.com/matannoam/pypugjs/issues
+See: https://github.com/kakulukia/pypugjs/issues

@@ -52,7 +52,7 @@ class Compiler(_Compiler):
 
             if not code.buffer:
               codeTag = code.val.strip().split(' ',1)[0]
-              if codeTag in self.autocloseCode:
+              if codeTag in self.auto_close_code:
                   self.buf.append('{%% end%s %%}'%codeTag)
 
     def visitEach(self,each):

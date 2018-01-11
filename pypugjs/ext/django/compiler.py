@@ -59,22 +59,7 @@ class Compiler(_Compiler):
         return "{%% __pypugjs_attrs %s %%}" % attrs
 
 
-try:
-    try:
-        from django.template.base import add_to_builtins
-    except ImportError:  # Django < 1.8
-        from django.template import add_to_builtins
-    add_to_builtins('pypugjs.ext.django.templatetags')
-except ImportError:
-    # Django 1.9 removed add_to_builtins and instead
-    # provides a setting to specify builtins:
-    # TEMPLATES['OPTIONS']['builtins'] = ['pypugjs.ext.django.templatetags']
-    pass
-
-try:
-    from django.utils.encoding import force_text as to_text
-except ImportError:
-    from django.utils.encoding import force_unicode as to_text
+from django.utils.encoding import force_text as to_text
 
 
 def decorate_templatize(func):
@@ -88,12 +73,9 @@ def decorate_templatize(func):
 
     return templatize
 
-try:
-    from django.utils.translation import trans_real
-    trans_real.templatize = decorate_templatize(trans_real.templatize)
-except AttributeError:
-    from django.utils.translation import template
-    template.templatize = decorate_templatize(template.templatize)
+from django.utils.translation import template
+# fix translation for pug templates
+template.templatize = decorate_templatize(template.templatize)
 
 try:
     from django.contrib.markup.templatetags.markup import markdown
