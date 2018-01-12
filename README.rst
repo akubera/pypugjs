@@ -70,11 +70,11 @@ In `settings.py`, add a `loader` to `TEMPLATES` like so:
             },
         },
     ]
-    
+
 In case you want to use Djangos translation feature, be sure to put this import statement at the top of your settings.py.
 
     import pypugjs.ext.django  # noqa
-    
+
 
 Jinja2
 ------
@@ -206,6 +206,17 @@ decorate the function with ``pypugjs.register_filter("filter_name")``
       return text.capitalize()
 
 
+Notable Features
+===================
+
+Adding conditional classes:
+
+    a(class={'active-class': True, 'another': False})
+
+
+
+
+
 TESTING
 =======
 
@@ -218,3 +229,9 @@ You can do the tests with::
 TODOs and BUGS
 ==============
 See: https://github.com/kakulukia/pypugjs/issues
+
+
+ChangeLog
+===========
+
+- conditional classes feature (thx to paradoxxxzero)
