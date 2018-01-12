@@ -1,6 +1,4 @@
-=======
-PyPugJS
-=======
+# PyPugJS [![Build Status](https://travis-ci.org/kakulukia/pypugjs.svg)](https://travis-ci.org/kakulukia/pypugjs)
 
 **PyPugJS is a fork of** `PyJade <http://github.com/syrusakbary/pyjade>`_
 **with the name Jade changed to** `PugsJS <https://github.com/pugjs/pug>`_.
