@@ -135,8 +135,10 @@ try:
 except ImportError:
     pass
 
+
 def setup_func():
     global jinja_env, processors
+
 
 def html_process(src, filename):
     # hack for includes to work because of working directory
@@ -145,9 +147,11 @@ def html_process(src, filename):
         src = re.sub(r'((^|\n)\s*include )(?!cases/)', '\\1cases/', src)
     return pypugjs.ext.html.process_pugjs(src)
 
+
 processors['Html'] = html_process
 
-def run_case(case,process):
+
+def run_case(case, process):
     global processors
     processor = processors[process]
     pugjs_file = open('cases/%s.pug'%case)
@@ -169,6 +173,7 @@ def run_case(case,process):
 
     except CurrentlyNotSupported:
         pass
+
 
 exclusions = {
     'Html': set([
