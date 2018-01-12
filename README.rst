@@ -5,7 +5,7 @@ PyPugJS
 **PyPugJS is a fork of** `PyJade <http://github.com/syrusakbary/pyjade>`_
 **with the name Jade changed to** `PugsJS <https://github.com/pugjs/pug>`_.
 
-**Additional disclaimer:** Since the original pypugjs died i took the liberty to keeping it alive, because
+**Additional disclaimer:** Since the original pypugjs died i took the liberty to keep it alive, because
 since starting to work with the jade compile for node i hate writing HTML and want to continue using it in my Django projects.
 I will keep the existing non Django stuff inside the project but i will only continue to support Django myself.
 Tornado, Mako etc. support will be welcome tho!
