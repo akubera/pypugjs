@@ -70,7 +70,7 @@ In `settings.py`, add a `loader` to `TEMPLATES` like so:
         },
     ]
     
-In case you want to use Djangos translation feature, be sure to put this import statement at the top od your settings.py.
+In case you want to use Djangos translation feature, be sure to put this import statement at the top of your settings.py.
 
     import pypugjs.ext.django  # noqa
     
