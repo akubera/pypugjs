@@ -171,7 +171,8 @@ def run_case(case,process):
         pass
 
 exclusions = {
-    'Html': set(['mixins', 'mixin.blocks', 'layout', 'unicode']),
+    'Html': set([
+        'mixins', 'mixin.blocks', 'layout', 'unicode', 'attrs.object']),
     'Mako': set(['layout']),
     'Tornado': set(['layout']),
     'Jinja2': set(['layout']),
