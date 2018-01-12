@@ -113,9 +113,7 @@ try:
     if django.VERSION >= (1, 7, 0):
         django.setup()
 
-    import django.template
-    import django.template.loader
-    from pypugjs.ext.django import Compiler as DjangoCompiler, Loader
+    from pypugjs.ext.django import Loader
 
 
     def django_process(src, filename):
@@ -126,7 +124,6 @@ try:
         )
 
         t = loader.get_template(filename)
-
         ctx = django.template.Context()
         return t.render(ctx)
 
@@ -198,7 +195,7 @@ exclusions = {
     'Tornado': {'layout', 'include_mixin'},
     'Jinja2': {'layout'},
     'Jinja2-variable_start_string': {'layout'},
-    'Django': {'layout', 'include_mixin'}
+    'Django': {'layout'}
 }
 
 

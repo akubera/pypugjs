@@ -39,20 +39,13 @@ class Loader(BaseLoader):
         return self.dirs if self.dirs is not None else self.engine.dirs
 
     def include_pug_sources(self, contents):
-        """Lets fetch all pug includes to enable included mixins"""
-
-        # def preprocess(self, source, name, filename=None):
-        print('IINNNCCCLLUUUDDDIIIIINNNNNNNNGGGGGGGGG..................')
-        # if 'include' in contents:
-        #     match = re.search(r'(^|\n)\s*include (.*)$', contents)
-        #     import ipdb; ipdb.set_trace()
-        #     match.groups()[0]
-            # source = re.sub(pattern, replace, source)
-
-        # if (not name or
-        #    (name and not os.path.splitext(name)[1] in self.file_extensions)):
-        #     return source
-        # return process(source,filename=name,compiler=Compiler,**self.options)
+        """Lets fetch top level pug includes to enable  mixins"""
+        match = re.search(r'^include (.*)$', contents, re.MULTILINE)
+        if match:
+            mixin_name = match.groups()[0]
+            template = self.get_template(mixin_name)
+            contents = re.sub(r'^.*include (.*)$', template.source,
+                              contents, flags=re.MULTILINE)
 
         return contents
 
