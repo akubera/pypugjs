@@ -145,7 +145,7 @@ Example
 
 This code
 
-.. code:: jade
+.. code:: pug
 
     !!! 5
     html(lang="en")
@@ -211,9 +211,25 @@ Notable Features
 
 Adding conditional classes:
 
+.. code:: pug
+
     a(class={'active-class': True, 'another': False})
 
+Define mixins like this *mixins/foo.pug*:
 
+.. code:: pug
+
+    mixin foo(data)
+      .foo {{ data }}
+
+And use the in your templates like this:
+
+.. code:: pug
+
+    include mixins/foo.pug
+
+    '...'
+    +foo(data)
 
 
 
