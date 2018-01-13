@@ -190,8 +190,8 @@ def run_case(case, process):
 
 
 exclusions = {
-    # its a pitty - the html compiler has the better results for mixins (indentation) but
-    # has to be excluded to not the other tests with their false results (bad expected indentation)
+    # its a pity - the html compiler has the better results for mixins (indentation) but
+    # has to be excluded to not "break" the other tests with their false results (bad expected indentation)
     'Html': {'mixins', 'mixin.blocks', 'layout', 'unicode', 'attrs.object', 'include_mixin'},
     'Mako': {'layout', 'include_mixin'},
     'Tornado': {'layout', 'include_mixin'},
