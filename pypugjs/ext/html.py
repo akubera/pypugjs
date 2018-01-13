@@ -6,7 +6,8 @@ import pypugjs
 from pypugjs.runtime import is_mapping, iteration, escape
 import six
 import os
-import operator 
+import operator
+
 
 def process_param(key, value, terse=False):
     if terse:
@@ -39,6 +40,7 @@ class Compiler(pypugjs.compiler.Compiler):
     local_context = {}
     mixins = {}
     useRuntime = True
+
     def _do_eval(self, value):
         if isinstance(value, six.string_types):
             value = value.encode('utf-8')
@@ -59,6 +61,7 @@ class Compiler(pypugjs.compiler.Compiler):
 
     def _make_mixin(self, mixin):
         arg_names = [arg.strip() for arg in mixin.args.split(",")]
+
         def _mixin(self, args):
             if args:
                 arg_values = self._do_eval(args)

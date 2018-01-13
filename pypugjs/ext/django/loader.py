@@ -1,20 +1,14 @@
 from __future__ import absolute_import
 
-import hashlib
 import os
 import re
 
 from django.conf import settings
-from django.conf import settings
-from django.core.exceptions import SuspiciousFileOperation
-from django.template import TemplateDoesNotExist, Origin
+from django.template import TemplateDoesNotExist
 from django.template.loaders.base import Loader as BaseLoader
-from django.utils._os import safe_join
 from django.utils.functional import cached_property
-from pypugjs import process
-from pypugjs.ext.django import Compiler
-from pypugjs.utils import process
 
+from pypugjs.utils import process
 from .compiler import Compiler
 
 
@@ -44,9 +38,8 @@ class Loader(BaseLoader):
         if match:
             mixin_name = match.groups()[0]
             template = self.get_template(mixin_name)
-            contents = re.sub(r'^.*include (.*)$', template.source,
+            contents = re.sub(r'^include (.*)$', template.source,
                               contents, flags=re.MULTILINE)
-
         return contents
 
     def get_contents(self, origin):
