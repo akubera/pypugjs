@@ -222,7 +222,7 @@ Define mixins like this *mixins/foo.pug*:
     mixin foo(data)
       .foo {{ data }}
 
-And use the in your templates like this:
+And use them in your templates like this:
 
 .. code:: pug
 
