@@ -51,7 +51,7 @@ class Loader(BaseLoader):
                     contents = origin.loader.get_contents(origin)
                     contents = self.include_pug_sources(contents)
                     contents = process(contents, filename=origin.template_name, compiler=Compiler)
-                except FileNotFoundError:
+                except IOError:
                     raise TemplateDoesNotExist(origin)
             else:
                 contents = origin.loader.get_contents(origin)
