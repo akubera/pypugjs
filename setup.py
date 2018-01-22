@@ -1,8 +1,8 @@
 from setuptools import setup,find_packages
 
 setup(name='pypugjs',
-      version='5.1.0',
-      download_url='https://github.com/kakulukia/pypugjs/archive/5.1.0.tar.gz',
+      version='5.1.1',
+      download_url='https://github.com/kakulukia/pypugjs/archive/5.1.1.tar.gz',
       packages=find_packages(),
       author='Andy Grabow',
       author_email='andy@freilandkiwis.de',
