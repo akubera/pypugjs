@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import contextlib
+import operator
+import os
+
+import six
 
 import pypugjs
-from pypugjs.runtime import is_mapping, iteration, escape
-import six
-import os
-import operator
+from pypugjs.runtime import iteration, escape
 
 
 def process_param(key, value, terse=False):
@@ -46,7 +47,7 @@ class Compiler(pypugjs.compiler.Compiler):
             value = value.encode('utf-8')
         try:
             value = eval(value, self.global_context, self.local_context)
-        except:
+        except Exception:
             return None
         return value
 
@@ -72,6 +73,7 @@ class Compiler(pypugjs.compiler.Compiler):
             local_context = dict(zip(arg_names, arg_values))
             with local_context_manager(self, local_context):
                 self.visitBlock(mixin.block)
+
         return _mixin
 
     def interpolate(self, text, escape=True):
@@ -138,7 +140,7 @@ class Compiler(pypugjs.compiler.Compiler):
                 self.visit(each.block)
 
     def attributes(self, attrs):
-        return " ".join(['''%s="%s"''' % (k,v) for (k,v) in attrs.items()])
+        return " ".join(['''%s="%s"''' % (k, v) for (k, v) in attrs.items()])
 
     def visitDynamicAttributes(self, attrs):
         classes = []
@@ -154,15 +156,17 @@ class Compiler(pypugjs.compiler.Compiler):
                 value = self._get_value(attr)
                 if value is True:
                     params.append((attr['name'], True))
-                elif value not in (None,False):
+                elif value not in (None, False):
                     params.append((attr['name'], escape(value)))
         if classes:
             classes = [six.text_type(c) for c in classes]
             params.append(('class', " ".join(classes)))
         if params:
-            self.buf.append(" "+" ".join([process_param(k, v, self.terse) for (k,v) in params]))
+            self.buf.append(" " + " ".join([process_param(k, v, self.terse) for (k, v) in params]))
+
 
 HTMLCompiler = Compiler
+
 
 def process_pugjs(src):
     parser = pypugjs.parser.Parser(src)

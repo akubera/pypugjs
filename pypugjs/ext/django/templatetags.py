@@ -107,7 +107,7 @@ class DefineMacroNode(template.Node):
 def do_macro(parser, token):
     try:
         args = token.split_contents()
-        tag_name, macro_name, args = args[0], args[1], args[2:]
+        macro_name, args = args[1], args[2:]
     except IndexError:
         m = ("'%s' tag requires at least one argument (macro name)"
              % token.contents.split()[0])
@@ -181,7 +181,7 @@ class UseMacroNode(template.Node):
 def do_usemacro(parser, token):
     try:
         args = token.split_contents()
-        tag_name, macro_name, values = args[0], args[1], args[2:]
+        macro_name, values = args[1], args[2:]
     except IndexError:
         m = ("'%s' tag requires at least one argument (macro name)"
              % token.contents.split()[0])
