@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import pypugjs
+from pypugjs.ext.jinja import Compiler
 
 a = pypugjs.Parser('''doctype 5
 html
@@ -13,7 +14,7 @@ html
         else
             h1 Hello World!''')
 block = a.parse()
-compiler = pypugjs.ext.jinja.Compiler(block)
+compiler = Compiler(block)
 print(compiler.compile())
 # OUT: <!DOCTYPE html>
 # OUT: <html{{__pypugjs_attrs(terse=True)}}>

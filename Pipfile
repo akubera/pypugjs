@@ -12,8 +12,11 @@ django = "*"
 mako = "*"
 tornado = "*"
 six = "*"
+coverage = "*"
+nose = "*"
 
 
 [dev-packages]
 
 nose = "*"
+ipdb = "*"

@@ -1,2 +1,6 @@
 PyPugs was originally created as PyJade by Syrus Akbary <me@syrusakbary.com> in
 November 2011.
+It was then maintained by Matan Noam Shavit who silently gave up and deleted the
+package in January 2018.
+Since I need it for my projects and hate coding plain HTML, I continued
+maintening this package.
