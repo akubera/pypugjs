@@ -1,15 +1,17 @@
 from __future__ import absolute_import
-from .utils import odict
-import types
+
+from itertools import chain
+
 import six
 from six.moves import reduce
-from itertools import chain
 
 try:
     from collections import Mapping as MappingType
 except ImportError:
     import UserDict
+
     MappingType = (UserDict.UserDict, UserDict.DictMixin, dict)
+
 
 def escape(s):
     """Convert the characters &, <, >, ' and " in string s to HTML-safe
@@ -26,14 +28,17 @@ def escape(s):
         s = str(s)
 
     return (s
-        .replace('&', '&amp;')
-        .replace('>', '&gt;')
-        .replace('<', '&lt;')
-        .replace("'", '&#39;')
-        .replace('"', '&#34;')
-    )
+            .replace('&', '&amp;')
+            .replace('>', '&gt;')
+            .replace('<', '&lt;')
+            .replace("'", '&#39;')
+            .replace('"', '&#34;')
+            )
 
-def attrs (attrs=[],terse=False, undefined=None):
+
+def attrs(attrs=None, terse=False, undefined=None):
+    if attrs is None:
+        attrs = []
 
     def extract_classes(cls):
         """Recursively extract_class from iterable and mappings"""
@@ -42,20 +47,21 @@ def attrs (attrs=[],terse=False, undefined=None):
         if isinstance(cls, dict):
             return tuple(sorted(dict(filter(
                 lambda x: x[1] and x[1] != undefined, cls.items()))))
-        return (str(cls),)
+        return str(cls),
 
     buf = []
     if bool(attrs):
         buf.append(u'')
-        for k,v in attrs:
+        for k, v in attrs:
             if undefined is not None and isinstance(v, undefined):
                 continue
-            if v!=None and (v!=False or type(v)!=bool):
-                if k=='class':
+            if v is not None and (v or type(v) != bool):
+                if k == 'class':
                     v = u' '.join(extract_classes(v))
-                t = v==True and type(v)==bool
-                if t and not terse: v=k
-                buf.append(u'%s'%k if terse and t else u'%s="%s"'%(k,escape(v)))
+                t = v and type(v) == bool
+                if t and not terse:
+                    v = k
+                buf.append(u'%s' % k if terse and t else u'%s="%s"' % (k, escape(v)))
     return u' '.join(buf)
 
 
