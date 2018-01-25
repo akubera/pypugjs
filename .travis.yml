@@ -24,7 +24,9 @@ matrix:
 #    allow_failures:
 #      - env: DJANGO=master
 
-script: make coverage
-
+script:
+  - make coverage
+  - make lint
+  
 after_success:
   - codecov
