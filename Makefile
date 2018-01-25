@@ -34,9 +34,14 @@ lint: ## check style with flake8
 test: ## run tests quickly with the default Python
 	SCRIPT_DIR=$$( cd "$$( dirname "$$0" )" && pwd ); \
 	export PYTHONPATH=$$PYTHONPATH:$$SCRIPT_DIR; \
-	nosetests -w pypugjs/testsuite/ -v --with-coverage
+	nosetests -w pypugjs/testsuite/  # --nocapture for debugging
 
-coverage: test ## test and open the coverage report
+coverage:  ## test and open the coverage report
+	SCRIPT_DIR=$$( cd "$$( dirname "$$0" )" && pwd ); \
+	export PYTHONPATH=$$PYTHONPATH:$$SCRIPT_DIR; \
+	nosetests -w pypugjs/testsuite/ --with-coverage
+
+view-coverage: ## open coverage report in the browser
 	coverage report -m
 	coverage html
 	open htmlcov/index.html

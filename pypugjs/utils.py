@@ -1,8 +1,12 @@
 from __future__ import absolute_import
 
+
+from .ext.html import Compiler as HTMLCompiler
+from .parser import Parser
+
 try:
     from itertools import izip, imap
-except:
+except Exception:
     izip, imap = zip, map
 from copy import deepcopy
 import six
@@ -133,12 +137,13 @@ class odict(dict):
     def __ne__(self, other):
         return not self.__eq__(other)
 
-    def __cmp__(self, other):
-        if isinstance(other, odict):
-            return cmp(self.items(), other.items())
-        elif isinstance(other, dict):
-            return dict.__cmp__(self, other)
-        return NotImplemented
+    # maybe not use and certainly not tested at all
+    # def __cmp__(self, other):
+    #     # if isinstance(other, odict):
+    #     #     return cmp(self.items(), other.items())
+    #     if isinstance(other, dict):
+    #         return dict.__cmp__(self, other)
+    #     return NotImplemented
 
     @classmethod
     def fromkeys(cls, iterable, default=None):
@@ -219,10 +224,6 @@ class odict(dict):
 
     __copy__ = copy
     __iter__ = iterkeys
-
-
-from .ext.html import Compiler as HTMLCompiler
-from .parser import Parser
 
 
 def process(src, filename=None, parser=Parser, compiler=HTMLCompiler, **kwargs):

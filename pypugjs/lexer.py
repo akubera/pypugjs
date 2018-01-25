@@ -1,6 +1,8 @@
 from __future__ import absolute_import
+
 import re
 from collections import deque
+
 import six
 
 
@@ -449,7 +451,7 @@ class Lexer(object):
             flags, name = captures[1:]
             tok = self.tok('code', name)
             tok.escape = flags.startswith('=')
-            #print captures
+            # print captures
             tok.buffer = '=' in flags
             # print tok.buffer
             return tok
@@ -459,7 +461,6 @@ class Lexer(object):
             index = self.indexOfDelimiters('(', ')')
             string = self.input[1:index]
             tok = self.tok('attrs')
-            l = len(string)
             colons = self.colons
             states = ['key']
 
@@ -476,13 +477,15 @@ class Lexer(object):
                 def __str__(self):
                     return dict(key=self.key, val=self.val, quote=self.quote,
                                 literal=self.literal).__str__()
+
             ns = Namespace()
 
             def state():
                 return states[-1]
 
             def interpolate(attr):
-                attr, num = self.RE_ATTR_INTERPOLATE.subn(lambda matchobj: '%s+"{}".format(%s)+%s' % (ns.quote, matchobj.group(1), ns.quote), attr)
+                attr, num = self.RE_ATTR_INTERPOLATE.subn(
+                    lambda matchobj: '%s+"{}".format(%s)+%s' % (ns.quote, matchobj.group(1), ns.quote), attr)
                 return attr, (num > 0)
 
             self.consume(index + 1)
@@ -490,6 +493,7 @@ class Lexer(object):
             tok.attrs = odict()
             tok.static_attrs = set()
             str_nums = list(map(str, range(10)))
+
             # print '------'
             def parse(c):
                 real = c
@@ -585,6 +589,7 @@ class Lexer(object):
                         ns.key += c
                     else:
                         ns.val += c
+
             for char in string:
                 parse(char)
 
@@ -681,8 +686,6 @@ class Lexer(object):
             or self.colon() \
             or self.string() \
             or self.text()
-
-            ##or self._while() \
 
 
 class InlineLexer(Lexer):

@@ -1,14 +1,12 @@
 from __future__ import print_function
 
-from django.template import Engine, TemplateDoesNotExist
+import six
+from django.template import Engine
+from nose import with_setup
 
 import pypugjs
 import pypugjs.ext.html
-from pypugjs.utils import process
 from pypugjs.exceptions import CurrentlyNotSupported
-import six
-
-from nose import with_setup
 
 processors = {}
 jinja_env = None
@@ -21,6 +19,7 @@ def teardown_func():
 try:
     from jinja2 import Environment, FileSystemLoader
     from pypugjs.ext.jinja import PyPugJSExtension
+
     jinja_env = Environment(extensions=[PyPugJSExtension], loader=FileSystemLoader('cases/'))
 
     def jinja_process(src, filename):
@@ -36,6 +35,7 @@ except ImportError:
 try:
     from jinja2 import Environment, FileSystemLoader
     from pypugjs.ext.jinja import PyPugJSExtension
+
     jinja_env = Environment(
         extensions=[PyPugJSExtension], loader=FileSystemLoader('cases/'),
         variable_start_string="{%#.-.**", variable_end_string="**.-.#%}"
@@ -53,6 +53,7 @@ except ImportError:
 try:
     import tornado.template
     from pypugjs.ext.tornado import patch_tornado
+
     patch_tornado()
 
     loader = tornado.template.Loader('cases/')
@@ -74,6 +75,7 @@ except ImportError:
 try:
     import django
     from django.conf import settings
+
     if django.VERSION >= (1, 8, 0):
         config = {
             'TEMPLATES': [{
@@ -115,7 +117,6 @@ try:
 
     from pypugjs.ext.django import Loader
 
-
     def django_process(src, filename):
         # actually use the django loader to get the sources
         loader = Loader(
@@ -135,6 +136,7 @@ try:
     import pypugjs.ext.mako
     import mako.template
     from mako.lookup import TemplateLookup
+
     dirlookup = TemplateLookup(
         directories=['cases/'], preprocessor=pypugjs.ext.mako.preprocessor)
 
@@ -164,17 +166,18 @@ def html_process(src, filename):
 
 processors['Html'] = html_process
 
+
 def run_case(case, process):
     import codecs
     global processors
     processor = processors[process]
-    with codecs.open('cases/%s.pug'%case, encoding='utf-8') as pugjs_file:
+    with codecs.open('cases/%s.pug' % case, encoding='utf-8') as pugjs_file:
         pugjs_src = pugjs_file.read()
         if isinstance(pugjs_src, six.binary_type):
             pugjs_src = pugjs_src.decode('utf-8')
         pugjs_file.close()
 
-    with codecs.open('cases/%s.html'%case, encoding='utf-8') as html_file:
+    with codecs.open('cases/%s.html' % case, encoding='utf-8') as html_file:
         html_src = html_file.read().strip('\n')
         if isinstance(html_src, six.binary_type):
             html_src = html_src.decode('utf-8')

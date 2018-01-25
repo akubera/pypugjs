@@ -127,7 +127,7 @@ class Parser(object):
             i += 1
         block = 'indent' == self.lookahead(i).type
         if block:
-            self.skip(i-1)
+            self.skip(i - 1)
             node.block = self.block()
         return node
 
@@ -247,7 +247,7 @@ class Parser(object):
                     text.append(node)
                 text.append('\n')
             else:
-                text.append(indent+self.advance().val)
+                text.append(indent + self.advance().val)
 
         if spaces == self._spaces:
             self._spaces = None
@@ -294,14 +294,13 @@ class Parser(object):
             i += 1
 
         if ':' == self.lookahead(i).type:
-            if 'indent' == self.lookahead(i+1).type:
+            if 'indent' == self.lookahead(i + 1).type:
                 raise Exception('unexpected token "indent" in file %s on line %d' %
                                 (self.filename, self.line()))
 
         tok = self.advance()
         tag = nodes.Tag(tok.val, buffer=tok.val[0] == '#')
         tag.inline_level = tok.inline_level
-        dot = None
 
         tag.line = self.line()
 
@@ -321,7 +320,7 @@ class Parser(object):
 
         v = self.peek().val
         if '.' == v:
-            dot = tag.textOnly = True
+            tag.textOnly = True
             self.advance()
         elif '<' == v:  # For inline elements
             tag.inline = True
