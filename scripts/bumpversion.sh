@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 while true; do
+    CURRENT=`python -c "import pypugjs; print(pypugjs.__version__)"`
     echo ""
-    echo "=== How big is the version bump? ==="
-    echo "===================================="
-    echo "1 - major"
-    echo "2 - minor"
+    echo "=== The current version is $CURRENT - what's the next one?"
+    echo "==========================================================="
+    echo "1 - new major version"
+    echo "2 - new minor version"
     echo "3 - patch"
     echo ""
     read yn

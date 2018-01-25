@@ -30,12 +30,12 @@ init2: ## create virtualenv for python2
 lint: ## check style with flake8
 	flake8 pypugjs
 
-test: ## run tests quickly with the default Python
+test: ## run testsuite
 	@SCRIPT_DIR=$$( cd "$$( dirname "$$0" )" && pwd ); \
 	export PYTHONPATH=$$PYTHONPATH:$$SCRIPT_DIR; \
 	nosetests -w pypugjs/testsuite/  # --nocapture for debugging
 
-coverage:  ## test and open the coverage report
+coverage:  ## test and generate coverage data
 	@SCRIPT_DIR=$$( cd "$$( dirname "$$0" )" && pwd ); \
 	export PYTHONPATH=$$PYTHONPATH:$$SCRIPT_DIR; \
 	nosetests -w pypugjs/testsuite/ --with-coverage
@@ -45,5 +45,5 @@ view-coverage: ## open coverage report in the browser
 	@coverage html
 	@open htmlcov/index.html
 
-release: clean ## package and upload a release
+release: clean ## package and upload a release (working dir must be clean)
 	@scripts/bumpversion.sh && python setup.py bdist_wheel && twine upload dist/*
