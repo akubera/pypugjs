@@ -52,7 +52,7 @@ class Loader(BaseLoader):
                     contents = self.include_pug_sources(contents)
                     contents = process(contents, filename=origin.template_name, compiler=Compiler)
                 # TODO: Change IOError to FileNotFoundError after future==0.17.0
-                except IOError as err:
+                except IOError:
                     raise TemplateDoesNotExist(origin)
             else:
                 contents = origin.loader.get_contents(origin)
