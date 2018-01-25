@@ -46,4 +46,4 @@ view-coverage: ## open coverage report in the browser
 	@open htmlcov/index.html
 
 release: clean ## package and upload a release
-	scripts/bumpversion.sh && python setup.py bdist_wheel && twine upload dist/*
+	@scripts/bumpversion.sh && python setup.py bdist_wheel && twine upload dist/*
