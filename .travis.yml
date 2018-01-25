@@ -13,10 +13,8 @@ env:
   - DJANGO=2.0
 
 install:
-  - pip install --upgrade setuptools
-  - pip install pipenv
+  - pip install jinja2 mako tornado six coverage nose
   - pip install django==$DJANGO
-  - pipenv install
 
 matrix:
     fast_finish: true
