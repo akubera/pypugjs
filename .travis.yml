@@ -13,7 +13,7 @@ env:
   - DJANGO=2.0
 
 install:
-  - pip install jinja2 mako tornado six coverage nose
+  - pip install jinja2 mako tornado six coverage nose codecov
   - pip install django==$DJANGO
 
 matrix:

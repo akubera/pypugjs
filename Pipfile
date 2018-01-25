@@ -13,9 +13,9 @@ tornado = "*"
 six = "*"
 coverage = "*"
 nose = "*"
+django = "*"
 
 
 [dev-packages]
 
-django = "*"
 ipdb = "*"
