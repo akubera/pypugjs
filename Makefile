@@ -18,14 +18,11 @@ clean-pyc: ## remove Python file artifacts
 	find . -name '*~' -exec rm -f {} +
 
 init: ## create virtualenv for python3
-	pipenv install; \s
-	pipenv install django
+	pipenv install --dev
 
 init2: ## create virtualenv for python2
-	pipenv install --two; \
-	pipenv shell; \
+	pipenv install --two
 	pipenv install "django<2.0"
-
 
 lint: ## check style with flake8
 	flake8 pypugjs
@@ -46,9 +43,5 @@ view-coverage: ## open coverage report in the browser
 	open htmlcov/index.html
 
 release: clean ## package and upload a release
-	python setup.py sdist bdist_wheel
+	python setup.py bdist_wheel
 	twine upload
-
-sdist: clean ## package
-	python setup.py sdist
-	ls -l dist
