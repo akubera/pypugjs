@@ -1,11 +1,11 @@
-PyPugJS |BuildStatus|_ |PyPiPackage|_ |Coverage|_
+PyPugJS |PyPiPackage|_ |BuildStatus|_ |Coverage|_
 ===================================================
-
-.. |BuildStatus| image:: https://travis-ci.org/kakulukia/pypugjs.svg
-.. _BuildStatus: https://travis-ci.org/kakulukia/pypugjs
 
 .. |PyPiPackage| image:: https://badge.fury.io/py/pypugjs.svg
 .. _PyPiPackage: https://badge.fury.io/py/pypugjs
+
+.. |BuildStatus| image:: https://travis-ci.org/kakulukia/pypugjs.svg
+.. _BuildStatus: https://travis-ci.org/kakulukia/pypugjs
 
 .. |Coverage| image:: https://codecov.io/gh/kakulukia/pypugjs/branch/master/graph/badge.svg
 .. _Coverage: https://codecov.io/gh/kakulukia/pypugjs
