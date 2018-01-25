@@ -15,7 +15,8 @@ PyPugJS |BuildStatus|_ |PyPiPackage|_ |Coverage|_
 
 **Additional disclaimer:** Since the original pypugjs died i took the liberty to keep it alive, because
 since starting to work with the jade compiler for node I hate writing HTML and want to continue using it in my Django projects.
-I will keep the existing non Django stuff inside the project, but I canot supportanything other since I'm not actively using it not will be in the foreseeable future. Tornado, Mako etc. support will be welcome tho!
+I will keep the existing non Django stuff inside the project, but I cannot support anything other since I'm not actively using
+it not will be in the foreseable future. Tornado, Mako etc. support will be welcome tho!
 
 PyPugJS is a high performance port of PugJS for python, that converts any .pug source into different
 Template-languages (Django, Jinja2, Mako or Tornado).
@@ -25,7 +26,6 @@ UTILITIES
 To simply output the conversion to your console::
 
     pypugjs [-c django|jinja|mako|tornado] input.pug [output.html]
-
 
 INSTALLATION
 ============
@@ -97,6 +97,8 @@ Converts to
       </body>
     </html>
 
+Convert existing templates online with the `HTML2Jade converter <http://www.html2jade.org/>`_.
+
 
 Register filters
 ================
@@ -109,7 +111,7 @@ decorate the function with ``pypugjs.register_filter("filter_name")``
     import pypugjs
 
     @pypugjs.register_filter('capitalize')
-    def capitalize(text,ast):
+    def capitalize(text, ast):
       return text.capitalize()
 
 
@@ -143,8 +145,7 @@ And use them in your templates like this:
 TESTING
 =======
 
-You must have `nose` package installed.
-You can do the tests with::
+To start the testsuite, start the following commands::
 
     make init
     make test
@@ -153,4 +154,4 @@ TODOs and BUGS
 ==============
 See: https://github.com/kakulukia/pypugjs/issues
 
-`Changelog <docs/HISTORY.rst>`_
+`ChangeLog <docs/HISTORY.rst>`_
