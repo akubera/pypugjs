@@ -1,44 +1,76 @@
-from setuptools import setup,find_packages
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import os
+import re
 
-setup(name='pypugjs',
-      version='5.1.1',
-      download_url='https://github.com/kakulukia/pypugjs/archive/5.1.1.tar.gz',
-      packages=find_packages(),
-      author='Andy Grabow',
-      author_email='andy@freilandkiwis.de',
-      description='PugJS syntax template adapter for Django, Jinja2, Mako and '
-                  'Tornado templates - copy of PyJade with the name changed',
-      long_description=open('README.rst').read(),
-      keywords='pug pugjs template converter',
-      url='http://github.com/kakulukia/pypugjs',
-      license='MIT',
-      entry_points={
-          'console_scripts' : ['pypugjs = pypugjs.convert:convert_file',]
-      },
-      install_requires=['six'],
-      tests_require=[
-            'nose',
-            'django',
-            'jinja2',
-            'tornado',
-            'pyramid >= 1.4, <= 1.4.99',
-            'mako',
-      ],
-      classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Framework :: Django',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Framework :: Django :: 1.10',
-        'Framework :: Django :: 1.11',
-        'Framework :: Django :: 2.0',
-        'Topic :: Software Development :: Libraries :: Python Modules',
-      ])
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+
+
+def get_version(*file_paths):
+    """Retrieves the version from django_undeletable/__init__.py"""
+    filename = os.path.join(os.path.dirname(__file__), *file_paths)
+    version_file = open(filename).read()
+    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]", version_file, re.M)
+    if version_match:
+        return version_match.group(1)
+    raise RuntimeError('Unable to find version string.')
+
+
+version = get_version("pypugjs", "__init__.py")
+
+
+readme = open('README.rst').read()
+history = open('HISTORY.rst').read().replace('.. :changelog:', '')
+url = 'https://github.com/kakulukia/pypugjs'
+
+setup(
+    name='pypugjs',
+    version=version,
+    description="PugJS syntax template adapter for Django, Jinja2, Mako and Tornado templates",
+    long_description=readme + '\n\n' + history,
+    author='Andy Grabow',
+    author_email='andy@freilandkiwis.de',
+    license='MIT',
+    keywords=['pug', 'pugjs', 'template', 'converter'],
+    url=url,
+    download_url=url + '/tarball/' + version,
+    packages=[
+      'pypugjs',
+    ],
+    entry_points={
+      'console_scripts': ['pypugjs = pypugjs.convert:convert_file']
+    },
+    install_requires=['six'],
+    tests_require=[
+        'nose',
+        'django',
+        'jinja2',
+        'tornado',
+        'pyramid >= 1.4, <= 1.4.99',
+        'mako',
+    ],
+    # include_package_data=True,
+    # zip_safe=False,
+    classifiers=[
+      'Development Status :: 4 - Beta',
+      'Intended Audience :: Developers',
+      'License :: OSI Approved :: MIT License',
+      'Operating System :: OS Independent',
+      'Programming Language :: Python',
+      'Natural Language :: English',
+      'Programming Language :: Python :: 2',
+      'Programming Language :: Python :: 2.7',
+      'Programming Language :: Python :: 3',
+      'Programming Language :: Python :: 3.4',
+      'Programming Language :: Python :: 3.5',
+      'Programming Language :: Python :: 3.6',
+      'Framework :: Django',
+      'Framework :: Django :: 1.10',
+      'Framework :: Django :: 1.11',
+      'Framework :: Django :: 2.0',
+      'Topic :: Software Development :: Libraries :: Python Modules',
+    ],
+)

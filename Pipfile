@@ -18,5 +18,4 @@ nose = "*"
 
 [dev-packages]
 
-nose = "*"
 ipdb = "*"
