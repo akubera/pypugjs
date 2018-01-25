@@ -18,14 +18,13 @@ clean-pyc: ## remove Python file artifacts
 	find . -name '*~' -exec rm -f {} +
 
 init: ## create virtualenv for python3
-	pipenv install --dev
-	pipenv shell
-	pip install django
+	pipenv install; \s
+	pipenv install django
 
 init2: ## create virtualenv for python2
-	pipenv install --dev --two
-	pipenv shell
-	pip install "django<2.0"
+	pipenv install --two; \
+	pipenv shell; \
+	pipenv install "django<2.0"
 
 
 lint: ## check style with flake8
