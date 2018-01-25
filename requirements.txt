@@ -1,5 +1,0 @@
-django
-jinja2
-mako
-tornado
-six

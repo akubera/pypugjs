@@ -3,7 +3,7 @@
 History
 -------
 
-6.0.0
+5.2.0
 +++++++
 
 * added Makefile for testing, installing, releasing, linting ...
@@ -21,3 +21,11 @@ History
 * mixin support for django
 * refactored the django tests to actually use the file loader
 * some pep8 fixes
+
+
+Authors
+---------
+
+* PyPugs was originally created as PyJade by Syrus Akbary <me@syrusakbary.com> in November 2011.
+* It was then renamed maintained by Matan Noam Shavit
+* Since I need it for my projects and hate coding plain HTML, I continued maintaining this package.

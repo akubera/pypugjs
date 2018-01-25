@@ -11,10 +11,12 @@ clean-build: ## remove build artifacts
 	rm -fr dist/
 	rm -fr htmlcov/
 	rm -fr *.egg-info
+	rm -rf .coverage
 
 clean-pyc: ## remove Python file artifacts
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
+	find . -name '*.orig' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
 
 init: ## create virtualenv for python3
@@ -43,5 +45,6 @@ view-coverage: ## open coverage report in the browser
 	open htmlcov/index.html
 
 release: clean ## package and upload a release
+	scripts/bumpversion.sh
 	python setup.py bdist_wheel
-	twine upload
+#	twine upload

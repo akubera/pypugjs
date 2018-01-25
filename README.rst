@@ -152,3 +152,5 @@ You can do the tests with::
 TODOs and BUGS
 ==============
 See: https://github.com/kakulukia/pypugjs/issues
+
+`Changelog <docs/HISTORY.rst>`_

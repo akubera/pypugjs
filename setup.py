@@ -23,7 +23,7 @@ version = get_version("pypugjs", "__init__.py")
 
 
 readme = open('README.rst').read()
-history = open('HISTORY.rst').read().replace('.. :changelog:', '')
+history = open('docs/HISTORY.rst').read().replace('.. :changelog:', '')
 url = 'https://github.com/kakulukia/pypugjs'
 
 setup(
