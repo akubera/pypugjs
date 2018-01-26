@@ -4,7 +4,7 @@ import os
 import re
 
 try:
-    from setuptools import setup
+    from setuptools import setup, find_packages
 except ImportError:
     from distutils.core import setup
 
@@ -37,9 +37,7 @@ setup(
     keywords=['pug', 'pugjs', 'template', 'converter'],
     url=url,
     download_url=url + '/tarball/' + version,
-    packages=[
-        'pypugjs',
-    ],
+    packages=find_packages(),
     entry_points={
         'console_scripts': ['pypugjs = pypugjs.convert:convert_file']
     },
