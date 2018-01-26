@@ -180,8 +180,8 @@ def run_case(case, process):
         html_file.close()
     try:
         processed_pugjs = processor(pugjs_src, '%s.pug' % case).strip('\n')
-        print('PROCESSED\n' + processed_pugjs, len(processed_pugjs))
-        print('EXPECTED\n' + html_src, len(html_src))
+        print('PROCESSED (' + str(len(processed_pugjs)) + ' chars)\n' + processed_pugjs)
+        print('\nEXPECTED (' + str(len(html_src)) + ' chars)\n' + html_src)
         assert processed_pugjs == html_src
 
     except CurrentlyNotSupported:

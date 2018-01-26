@@ -28,19 +28,23 @@ init2: ## create virtualenv for python2
 	pipenv install "django<2.0"
 
 lint: ## check style with flake8
-	flake8 pypugjs
+#	@echo "\nlooking for lints .."
+#	@echo "===================="
+	@flake8 pypugjs
 
 test: ## run testsuite
 	@SCRIPT_DIR=$$( cd "$$( dirname "$$0" )" && pwd ); \
 	export PYTHONPATH=$$PYTHONPATH:$$SCRIPT_DIR; \
 	nosetests -w pypugjs/testsuite/  # --nocapture for debugging
+	@make lint
 
 coverage:  ## test and generate coverage data
 	@SCRIPT_DIR=$$( cd "$$( dirname "$$0" )" && pwd ); \
 	export PYTHONPATH=$$PYTHONPATH:$$SCRIPT_DIR; \
 	nosetests -w pypugjs/testsuite/ --with-coverage
+	@make lint
 
-view-coverage: ## open coverage report in the browser
+view-coverage: coverage ## open coverage report in the browser
 	@coverage report -m
 	@coverage html
 	@open htmlcov/index.html

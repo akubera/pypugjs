@@ -207,7 +207,3 @@ def do_usemacro(parser, token):
 
     macro.parser = parser
     return UseMacroNode(macro, fe_args, fe_kwargs)
-
-
-if __name__ == '__main__':
-    unittest.main()
