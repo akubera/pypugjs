@@ -1,9 +1,7 @@
-import unittest
-
+import six
 from django import template
 from django.template.base import FilterExpression
 from django.template.loader import get_template
-import six
 
 from pypugjs.runtime import iteration
 
