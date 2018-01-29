@@ -1,12 +1,11 @@
 doctype 5
 include world
-  
+
 html
 	head: title Hello from flask
 	body
 		if name
-			h1(class="red") Hello
-				= name
+			h1(class="red") Hello #{ name|capitalize }
 			span.description #{name|capitalize} is a great name!
 		else
 			h1 Hello
