@@ -38,6 +38,8 @@ htmlcov
 
 # Pycharm/Intellij
 .idea
+Pipfile.lock
+__pycache__/
 
 # Complexity
 output/*.html
