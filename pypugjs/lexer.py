@@ -62,7 +62,7 @@ class Lexer(object):
     RE_DOCTYPE = re.compile(r'^(?:!!!|doctype) *([^\n]+)?')
     RE_ID = re.compile(r'^#([\w-]+)')
     RE_CLASS = re.compile(r'^\.([\w-]+)')
-    RE_STRING = re.compile(r'^(?:\| ?)([^\n]+)')
+    RE_STRING = re.compile(r'^(?:\| ?)([^\n]*)')
     RE_TEXT = re.compile(r'^([^\n]+)')
     RE_EXTENDS = re.compile(r'^extends? +([^\n]+)')
     RE_PREPEND = re.compile(r'^prepend +([^\n]+)')
