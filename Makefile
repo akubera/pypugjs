@@ -34,7 +34,7 @@ lint: ## check style with flake8
 test: ## run testsuite
 	@SCRIPT_DIR=$$( cd "$$( dirname "$$0" )" && pwd ); \
 	export PYTHONPATH=$$PYTHONPATH:$$SCRIPT_DIR; \
-	nosetests -w pypugjs/testsuite/  # --nocapture for debugging
+	nosetests -w pypugjs/testsuite/ # --nocapture  # for debugging
 	@make lint
 
 coverage:  ## test and generate coverage data

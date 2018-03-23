@@ -63,7 +63,7 @@ class Loader(BaseLoader):
             for origin in loader.get_template_sources(template_name):
                 yield origin
 
-    def get_template(self, template_name, skip=None):
+    def get_template(self, template_name, skip=None, **kwargs):
         """
         Call self.get_template_sources() and return a Template object for
         the first template matching template_name. If skip is provided, ignore
@@ -74,7 +74,6 @@ class Loader(BaseLoader):
         also cached because this resulted in a major loading issued in a
         wagtail admin instance.
         """
-
         template = self.template_cache.get(template_name)
         if not template or self.debug:
             try:
