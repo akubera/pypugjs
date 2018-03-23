@@ -25,7 +25,6 @@ init: ## create virtualenv for python3
 
 init2: ## create virtualenv for python2
 	pipenv install --two
-	pipenv install "django<2.0"
 
 lint: ## check style with flake8
 #	@echo "\nlooking for lints .."
