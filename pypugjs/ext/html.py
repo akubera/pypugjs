@@ -7,6 +7,7 @@ import os
 import six
 
 import pypugjs
+from pypugjs.exceptions import CurrentlyNotSupported
 from pypugjs.runtime import iteration, escape
 
 
@@ -95,7 +96,7 @@ class Compiler(pypugjs.compiler.Compiler):
         self.visit(block)
 
     def visitExtends(self, node):
-        raise pypugjs.exceptions.CurrentlyNotSupported()
+        raise CurrentlyNotSupported()
 
     def visitMixin(self, mixin):
         if mixin.block:
