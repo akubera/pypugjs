@@ -32,9 +32,11 @@ In `settings.py`, add a `loader` to `TEMPLATES` like so:
         },
     ]
 
-In case you want to use Djangos translation feature, be sure to put this import statement at the top of your settings.py.
+In case you want to use Djangos translation feature add the following call to settings.py
 
-    import pypugjs.ext.django  # noqa
+    from pypugjs.ext.django import enable_pug_translations
+
+    enable_pug_translations()
 
 
 Jinja2
