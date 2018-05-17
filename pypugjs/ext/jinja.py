@@ -84,7 +84,7 @@ class Compiler(_Compiler):
         if os.path.exists(path):
             src = open(path, 'r').read()
         else:
-            raise Exception("Include path doesn't exists ({})".fomat(path))
+            raise Exception("Include path doesn't exists ({})".format(path))
 
         parser = pypugjs.parser.Parser(src)
         block = parser.parse()
