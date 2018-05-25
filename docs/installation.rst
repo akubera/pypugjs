@@ -34,7 +34,7 @@ In `settings.py`, add a `loader` to `TEMPLATES` like so:
 
 In case you want to use Djangos translation feature add the following call to settings.py
 
-    from pypugjs.ext.django import enable_pug_translations
+    from pypugjs.ext.django.compiler import enable_pug_translations
 
     enable_pug_translations()
 
