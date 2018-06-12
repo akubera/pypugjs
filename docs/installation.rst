@@ -1,5 +1,5 @@
-Django
-------
+Django 1.11+
+------------
 
 In `settings.py`, add a `loader` to `TEMPLATES` like so:
 
