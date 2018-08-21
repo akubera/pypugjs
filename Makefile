@@ -49,4 +49,23 @@ view-coverage: coverage ## open coverage report in the browser
 	@open htmlcov/index.html
 
 release: clean ## package and upload a release (working dir must be clean)
-	@scripts/bumpversion.sh && python setup.py bdist_wheel && twine upload dist/*
+	@while true; do \
+		CURRENT=`python -c "import pypugjs; print(pypugjs.__version__)"`; \
+		echo ""; \
+		echo "=== The current version is $$CURRENT - what's the next one?"; \
+		echo "==========================================================="; \
+		echo "1 - new major version"; \
+		echo "2 - new minor version"; \
+		echo "3 - patch"; \
+		echo "4 - keep the current version"; \
+		echo ""; \
+		read yn; \
+		case $$yn in \
+			1 ) bumpversion major; break;; \
+			2 ) bumpversion minor; break;; \
+			3 ) bumpversion patch; break;; \
+			4 ) break;; \
+			* ) echo "Please answer 1-3.";; \
+		esac \
+	done
+	@python setup.py bdist_wheel && twine upload dist/*
