@@ -41,7 +41,7 @@ setup(
     entry_points={
         'console_scripts': ['pypugjs = pypugjs.convert:convert_file']
     },
-    install_requires=['six'],
+    install_requires=['six','chardet'],
     tests_require=[
         'nose',
         'django',

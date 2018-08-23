@@ -4,13 +4,15 @@ from __future__ import absolute_import
 from .ext.html import Compiler as HTMLCompiler
 from .parser import Parser
 
+
 try:
     from itertools import izip, imap
 except Exception:
     izip, imap = zip, map
 from copy import deepcopy
+from chardet.universaldetector import UniversalDetector
 import six
-
+import io
 missing = object()
 
 
@@ -231,3 +233,22 @@ def process(src, filename=None, parser=Parser, compiler=HTMLCompiler, **kwargs):
     block = _parser.parse()
     _compiler = compiler(block, **kwargs)
     return _compiler.compile().strip()
+
+def open(file, mode='r', buffering=-1, encoding=None, errors=None,
+                 newline=None, closefd=True):
+        rawdata = io.open(file, mode='rb')
+
+        detector = UniversalDetector()
+        for line in rawdata.readlines():
+            detector.feed(line)
+            if detector.done: break
+        detector.close()
+        rawdata.close()
+
+        decoded = io.open(file, mode=mode, buffering=buffering,
+                          encoding=detector.result["encoding"],
+                          errors=errors,
+                          newline=newline,
+                          closefd=closefd)
+
+        return decoded

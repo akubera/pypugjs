@@ -11,6 +11,6 @@ six = "*"
 coverage = "*"
 nose = "*"
 flask = "*"
-
+chardet = "*"
 [dev-packages]
 ipdb = "*"
