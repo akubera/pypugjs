@@ -8,9 +8,7 @@ import six
 
 import pypugjs
 from pypugjs.exceptions import CurrentlyNotSupported
-from pypugjs.runtime import iteration, escape
-from pypugjs.utils import open
-
+from pypugjs.runtime import iteration, escape,open
 def process_param(key, value, terse=False):
     if terse:
         if (key == value) or (value is True):

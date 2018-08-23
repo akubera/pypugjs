@@ -5,6 +5,9 @@ from itertools import chain
 import six
 from six.moves import reduce
 
+from chardet.universaldetector import UniversalDetector
+import io
+
 try:
     from collections import Mapping as MappingType
 except ImportError:
@@ -135,3 +138,21 @@ def iteration(obj, num_keys):
 
     else:
         return iter_obj
+def open(file, mode='r', buffering=-1, encoding=None, errors=None,
+                 newline=None, closefd=True):
+        rawdata = io.open(file, mode='rb')
+
+        detector = UniversalDetector()
+        for line in rawdata.readlines():
+            detector.feed(line)
+            if detector.done: break
+        detector.close()
+        rawdata.close()
+
+        decoded = io.open(file, mode=mode, buffering=buffering,
+                          encoding=detector.result["encoding"],
+                          errors=errors,
+                          newline=newline,
+                          closefd=closefd)
+
+        return decoded
