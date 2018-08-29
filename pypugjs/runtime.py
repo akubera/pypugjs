@@ -30,13 +30,13 @@ def escape(s):
     else:
         s = str(s)
 
-    return (s
-            .replace('&', '&amp;')
-            .replace('>', '&gt;')
-            .replace('<', '&lt;')
-            .replace("'", '&#39;')
-            .replace('"', '&#34;')
-            )
+    return (
+        s.replace('&', '&amp;')
+        .replace('>', '&gt;')
+        .replace('<', '&lt;')
+        .replace("'", '&#39;')
+        .replace('"', '&#34;')
+    )
 
 
 def attrs(attrs=None, terse=False, undefined=None):
@@ -48,9 +48,10 @@ def attrs(attrs=None, terse=False, undefined=None):
         if isinstance(cls, (list, tuple)):
             return tuple(reduce(lambda t1, t2: t1 + t2, map(extract_classes, cls)))
         if isinstance(cls, dict):
-            return tuple(sorted(dict(filter(
-                lambda x: x[1] and x[1] != undefined, cls.items()))))
-        return str(cls),
+            return tuple(
+                sorted(dict(filter(lambda x: x[1] and x[1] != undefined, cls.items())))
+            )
+        return (str(cls),)
 
     buf = []
     if bool(attrs):
@@ -140,21 +141,27 @@ def iteration(obj, num_keys):
         return iter_obj
 
 
-def open(file, mode='r', buffering=-1, encoding=None, errors=None, newline=None, closefd=True):
-        rawdata = io.open(file, mode='rb')
+def open(
+    file, mode='r', buffering=-1, encoding=None, errors=None, newline=None, closefd=True
+):
+    rawdata = io.open(file, mode='rb')
 
-        detector = UniversalDetector()
-        for line in rawdata.readlines():
-            detector.feed(line)
-            if detector.done:
-                break
-        detector.close()
-        rawdata.close()
+    detector = UniversalDetector()
+    for line in rawdata.readlines():
+        detector.feed(line)
+        if detector.done:
+            break
+    detector.close()
+    rawdata.close()
 
-        decoded = io.open(file, mode=mode, buffering=buffering,
-                          encoding=detector.result["encoding"],
-                          errors=errors,
-                          newline=newline,
-                          closefd=closefd)
+    decoded = io.open(
+        file,
+        mode=mode,
+        buffering=buffering,
+        encoding=detector.result["encoding"],
+        errors=errors,
+        newline=newline,
+        closefd=closefd,
+    )
 
-        return decoded
+    return decoded

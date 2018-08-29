@@ -20,7 +20,11 @@ class Loader(BaseLoader):
         self.engine = engine
         self.template_cache = {}
         self._loaders = loaders
-        self.debug = settings.TEMPLATE_DEBUG if hasattr(settings, 'TEMPLATE_DEBUG') else settings.DEBUG
+        self.debug = (
+            settings.TEMPLATE_DEBUG
+            if hasattr(settings, 'TEMPLATE_DEBUG')
+            else settings.DEBUG
+        )
 
     @cached_property
     def loaders(self):
@@ -49,7 +53,9 @@ class Loader(BaseLoader):
         if os.path.splitext(origin.template_name)[1] in ('.pug', '.jade'):
             contents = origin.loader.get_contents(origin)
             contents = self.include_pug_sources(contents)
-            contents = process(contents, filename=origin.template_name, compiler=Compiler)
+            contents = process(
+                contents, filename=origin.template_name, compiler=Compiler
+            )
         else:
             contents = origin.loader.get_contents(origin)
 

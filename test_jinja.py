@@ -3,7 +3,8 @@ from __future__ import print_function
 import pypugjs
 from pypugjs.ext.jinja import Compiler
 
-a = pypugjs.Parser('''!!! 5
+a = pypugjs.Parser(
+    '''!!! 5
 html
     head: title Hello from flask
     body(attr="2" ba=2)
@@ -12,7 +13,8 @@ html
                 span #{ name }
             span.description #{ name|capitalize } is a great name!
         else
-            h1 Hello World!''')
+            h1 Hello World!'''
+)
 block = a.parse()
 compiler = Compiler(block)
 print(compiler.compile())

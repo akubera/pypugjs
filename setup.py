@@ -37,10 +37,8 @@ setup(
     url=url,
     download_url=url + '/tarball/' + version,
     packages=find_packages(),
-    entry_points={
-        'console_scripts': ['pypugjs = pypugjs.convert:convert_file']
-    },
-    install_requires=['six','chardet'],
+    entry_points={'console_scripts': ['pypugjs = pypugjs.convert:convert_file']},
+    install_requires=['six', 'chardet'],
     tests_require=[
         'nose',
         'django',
