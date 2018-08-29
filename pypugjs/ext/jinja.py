@@ -6,7 +6,7 @@ from jinja2.runtime import Undefined
 
 import pypugjs.runtime
 from pypugjs import Compiler as _Compiler
-from pypugjs.runtime import attrs as _attrs, iteration
+from pypugjs.runtime import attrs as _attrs, iteration, open
 from pypugjs.utils import process
 
 ATTRS_FUNC = '__pypugjs_attrs'
