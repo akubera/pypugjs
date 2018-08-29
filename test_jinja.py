@@ -9,7 +9,7 @@ html
     head: title Hello from flask
     body(attr="2" ba=2)
         if name
-            h1(class="red") Hello 
+            h1(class="red") Hello
                 span #{ name }
             span.description #{ name|capitalize } is a great name!
         else
