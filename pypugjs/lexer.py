@@ -524,7 +524,6 @@ class Lexer(object):
                 if c in (',', '\n') or (
                     c == ' '
                     and state() == 'val'
-                    and len(states) == 2
                     and ns.val.strip()
                 ):
                     s = state()
