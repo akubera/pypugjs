@@ -42,11 +42,32 @@ In case you want to use Djangos translation feature add the following call to se
 Jinja2
 ------
 
-Just add `pypugjs.ext.jinja.PyPugJSExtension` as extension
+Install the jinja2 lib
+
+.. code:: shell
+
+    pip install jinja2
+
+
+In your code add the pug extension like this:
 
 .. code:: python
 
-    jinja_env = Environment(extensions=['pypugjs.ext.jinja.PyPugJSExtension'])
+    from jinja2 import Environment, FileSystemLoader
+
+    env = Environment(
+        loader=FileSystemLoader('.'),
+        extensions=['pypugjs.ext.jinja.PyPugJSExtension']
+    )
+
+    template = env.get_template('test.pug')
+    print(template.render(name="World"))
+
+While test.pug looks like this:
+
+.. code:: pug
+
+    .foo Hello {{ name }}!
 
 
 Mako
