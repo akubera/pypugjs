@@ -92,6 +92,7 @@ Just add  `pypugjs.ext.jinja.PyPugJSExtension` as extension to the environment o
 
     app.jinja_env.add_extension('pypugjs.ext.jinja.PyPugJSExtension')
 
+Have a look at a lil example `here<https://github.com/kakulukia/pypugjs/tree/master/examples/flask>`_.
 
 Pyramid
 -------
